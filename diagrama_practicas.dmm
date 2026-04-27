@@ -34,7 +34,7 @@
 					"datatype": "ENUM",
 					"param": "'bebe','prebenjamin','benjamin','alevin','infantil','cadete','juvenil','senior'",
 					"pk": false,
-					"nn": false,
+					"nn": true,
 					"fk": false,
 					"comment": "",
 					"defaultvalue": "",
@@ -55,7 +55,7 @@
 					"datatype": "CHAR",
 					"param": "1",
 					"pk": false,
-					"nn": false,
+					"nn": true,
 					"fk": false,
 					"comment": "",
 					"defaultvalue": "",
@@ -73,8 +73,8 @@
 			],
 			"relations": [
 				"af00558f-6686-446b-9eb9-24f41ae882ab",
-				"31bc1d7f-b989-4e4e-a510-9f211a4bb247",
-				"ced1d1cb-d19c-43ab-b822-e82d1768d931"
+				"ced1d1cb-d19c-43ab-b822-e82d1768d931",
+				"e0d5c824-0933-4ef6-8610-689be651c2da"
 			],
 			"lines": [],
 			"keys": [
@@ -131,7 +131,9 @@
 					"zerofill": false,
 					"unsigned": false,
 					"enum": "",
-					"estimatedSize": ""
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
 				},
 				{
 					"id": "329e6950-1daf-4b5f-9d4e-6b837cb7ea14",
@@ -139,7 +141,7 @@
 					"datatype": "VARCHAR",
 					"param": "100",
 					"pk": false,
-					"nn": false,
+					"nn": true,
 					"fk": false,
 					"comment": "",
 					"defaultvalue": "",
@@ -152,7 +154,9 @@
 					"zerofill": false,
 					"unsigned": false,
 					"enum": "",
-					"estimatedSize": ""
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
 				},
 				{
 					"id": "68266b0c-f7e4-4c57-9202-b34641b1e063",
@@ -160,7 +164,7 @@
 					"datatype": "DATE",
 					"param": "",
 					"pk": false,
-					"nn": false,
+					"nn": true,
 					"fk": false,
 					"comment": "",
 					"defaultvalue": "",
@@ -173,28 +177,9 @@
 					"zerofill": false,
 					"unsigned": false,
 					"enum": "",
-					"estimatedSize": ""
-				},
-				{
-					"id": "8d4a25d4-24cf-4713-86a5-a15d42dc44ab",
-					"name": "dorsal",
-					"datatype": "INT",
-					"param": "",
-					"pk": false,
-					"nn": false,
-					"fk": false,
-					"comment": "",
-					"defaultvalue": "",
-					"data": "",
-					"after": "",
-					"autoinc": false,
-					"collation": "",
-					"charset": "",
-					"binary": false,
-					"zerofill": false,
-					"unsigned": false,
-					"enum": "",
-					"estimatedSize": ""
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
 				},
 				{
 					"id": "0b13e3ab-2ada-4acc-a876-7602bac1359c",
@@ -215,7 +200,9 @@
 					"zerofill": false,
 					"unsigned": false,
 					"enum": "",
-					"estimatedSize": ""
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
 				},
 				{
 					"id": "939f4db1-77cd-46ce-94ed-57c34d91f9aa",
@@ -236,7 +223,9 @@
 					"zerofill": false,
 					"unsigned": false,
 					"enum": "",
-					"estimatedSize": ""
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
 				},
 				{
 					"id": "bbe5d63d-0077-4217-8372-9e83db2caa14",
@@ -244,7 +233,7 @@
 					"datatype": "BOOLEAN",
 					"param": "",
 					"pk": false,
-					"nn": false,
+					"nn": true,
 					"fk": false,
 					"comment": "",
 					"defaultvalue": "",
@@ -257,7 +246,9 @@
 					"zerofill": false,
 					"unsigned": false,
 					"enum": "",
-					"estimatedSize": ""
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
 				},
 				{
 					"id": "8f804531-10bc-431c-bad2-b9862d0062ed",
@@ -278,13 +269,38 @@
 					"zerofill": false,
 					"unsigned": false,
 					"enum": "",
-					"estimatedSize": ""
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
+				},
+				{
+					"id": "8d4a25d4-24cf-4713-86a5-a15d42dc44ab",
+					"name": "dorsal",
+					"datatype": "INT",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"fk": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
 				}
 			],
 			"relations": [
 				"af00558f-6686-446b-9eb9-24f41ae882ab",
-				"683dc80d-578f-47c0-81fa-4663b0110187",
-				"d863c711-7663-4511-95d7-1a52702aff1b"
+				"d863c711-7663-4511-95d7-1a52702aff1b",
+				"ccb9c7c1-bcbf-4273-9039-06bda05d6a74"
 			],
 			"lines": [],
 			"keys": [
@@ -342,6 +358,28 @@
 					"unsigned": false,
 					"enum": "",
 					"estimatedSize": ""
+				},
+				{
+					"id": "7fe9a9a7-dcce-4a98-86cc-3e9035d0ab6f",
+					"name": "JUGADOR_id_jugador",
+					"datatype": "INT",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"fk": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": "",
+					"chosen": false
 				},
 				{
 					"id": "1a11d60c-ab15-4830-a37d-20af0f54069d",
@@ -412,29 +450,8 @@
 					"datatype": "BOOLEAN",
 					"param": "",
 					"pk": false,
-					"nn": false,
-					"fk": false,
-					"comment": "",
-					"defaultvalue": "",
-					"data": "",
-					"after": "",
-					"autoinc": false,
-					"collation": "",
-					"charset": "",
-					"binary": false,
-					"zerofill": false,
-					"unsigned": false,
-					"enum": "",
-					"estimatedSize": ""
-				},
-				{
-					"id": "3c8ded6e-13ef-4682-b26c-df82fa33e1f2",
-					"name": "JUGADOR_id_jugador",
-					"datatype": "INT",
-					"param": "",
-					"pk": false,
 					"nn": true,
-					"fk": true,
+					"fk": false,
 					"comment": "",
 					"defaultvalue": "",
 					"data": "",
@@ -450,7 +467,7 @@
 				}
 			],
 			"relations": [
-				"683dc80d-578f-47c0-81fa-4663b0110187"
+				"ccb9c7c1-bcbf-4273-9039-06bda05d6a74"
 			],
 			"lines": [],
 			"keys": [
@@ -462,6 +479,17 @@
 						{
 							"id": "04765180-a569-42d2-a307-fd7cef292141",
 							"colid": "e6aed6c7-1405-4776-89f8-2a8985787631"
+						}
+					]
+				},
+				{
+					"id": "cd9b17d2-4d64-48e5-8c21-b5664206fe9e",
+					"isPk": false,
+					"name": "FICHA_MEDICA_AK",
+					"cols": [
+						{
+							"id": "1816ebc5-b313-4d9b-be2d-9ac6672089d6",
+							"colid": "7fe9a9a7-dcce-4a98-86cc-3e9035d0ab6f"
 						}
 					]
 				}
@@ -490,7 +518,7 @@
 			"cols": [
 				{
 					"id": "c655ffea-8d77-4d7a-9ad7-f98650980da6",
-					"name": "id_staff",
+					"name": "id_cuerpo_tecnico",
 					"datatype": "INT",
 					"param": "",
 					"pk": true,
@@ -500,7 +528,7 @@
 					"defaultvalue": "",
 					"data": "",
 					"after": "",
-					"autoinc": false,
+					"autoinc": true,
 					"collation": "",
 					"charset": "",
 					"binary": false,
@@ -515,7 +543,7 @@
 					"datatype": "VARCHAR",
 					"param": "100",
 					"pk": false,
-					"nn": false,
+					"nn": true,
 					"fk": false,
 					"comment": "",
 					"defaultvalue": "",
@@ -536,9 +564,9 @@
 					"datatype": "ENUM",
 					"param": "'entrenador','segundo_entrenador','delegado','medico','analista','preparador_fisico','encargado_material'",
 					"pk": false,
-					"nn": false,
+					"nn": true,
 					"fk": false,
-					"comment": "",
+					"comment": "'entrenador','segundo_entrenador','delegado','medico','analista','preparador_fisico','encargado_material'",
 					"defaultvalue": "",
 					"data": "",
 					"after": "",
@@ -557,29 +585,8 @@
 					"datatype": "BOOLEAN",
 					"param": "",
 					"pk": false,
-					"nn": false,
-					"fk": false,
-					"comment": "",
-					"defaultvalue": "",
-					"data": "",
-					"after": "",
-					"autoinc": false,
-					"collation": "",
-					"charset": "",
-					"binary": false,
-					"zerofill": false,
-					"unsigned": false,
-					"enum": "",
-					"estimatedSize": ""
-				},
-				{
-					"id": "5973b66d-ae70-4ac8-b204-3f5f98eac9ce",
-					"name": "EQUIPO_id_equipo",
-					"datatype": "INT",
-					"param": "",
-					"pk": false,
 					"nn": true,
-					"fk": true,
+					"fk": false,
 					"comment": "",
 					"defaultvalue": "",
 					"data": "",
@@ -595,7 +602,7 @@
 				}
 			],
 			"relations": [
-				"31bc1d7f-b989-4e4e-a510-9f211a4bb247"
+				"e929ce2a-1395-4ad6-ae47-29c76d246d9f"
 			],
 			"lines": [],
 			"keys": [
@@ -652,91 +659,9 @@
 					"zerofill": false,
 					"unsigned": false,
 					"enum": "",
-					"estimatedSize": ""
-				},
-				{
-					"id": "d7d17eed-472b-4fa8-8e63-3b21bb6cfd77",
-					"name": "fecha",
-					"datatype": "DATE",
-					"param": "",
-					"pk": false,
-					"nn": false,
-					"fk": false,
-					"comment": "",
-					"defaultvalue": "",
-					"data": "",
-					"after": "",
-					"autoinc": false,
-					"collation": "",
-					"charset": "",
-					"binary": false,
-					"zerofill": false,
-					"unsigned": false,
-					"enum": "",
-					"estimatedSize": ""
-				},
-				{
-					"id": "5e388a26-45af-4e98-a5e5-705320d0b212",
-					"name": "rival",
-					"datatype": "VARCHAR",
-					"param": "100",
-					"pk": false,
-					"nn": false,
-					"fk": false,
-					"comment": "",
-					"defaultvalue": "",
-					"data": "",
-					"after": "",
-					"autoinc": false,
-					"collation": "",
-					"charset": "",
-					"binary": false,
-					"zerofill": false,
-					"unsigned": false,
-					"enum": "",
-					"estimatedSize": ""
-				},
-				{
-					"id": "9bd3a5ab-ae51-45d1-bfce-2e1aa4d0110a",
-					"name": "lugar",
-					"datatype": "VARCHAR",
-					"param": "100",
-					"pk": false,
-					"nn": false,
-					"fk": false,
-					"comment": "",
-					"defaultvalue": "",
-					"data": "",
-					"after": "",
-					"autoinc": false,
-					"collation": "",
-					"charset": "",
-					"binary": false,
-					"zerofill": false,
-					"unsigned": false,
-					"enum": "",
-					"estimatedSize": ""
-				},
-				{
-					"id": "9f0afc87-953a-4b38-b218-7b46546ca496",
-					"name": "resultado",
-					"datatype": "VARCHAR",
-					"param": "20",
-					"pk": false,
-					"nn": false,
-					"fk": false,
-					"comment": "",
-					"defaultvalue": "",
-					"data": "",
-					"after": "",
-					"autoinc": false,
-					"collation": "",
-					"charset": "",
-					"binary": false,
-					"zerofill": false,
-					"unsigned": false,
-					"enum": "",
-					"estimatedSize": ""
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
 				},
 				{
 					"id": "8317010f-2e33-40d6-a81d-fc5b1fe0347a",
@@ -757,7 +682,170 @@
 					"zerofill": false,
 					"unsigned": false,
 					"enum": "",
-					"estimatedSize": ""
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
+				},
+				{
+					"id": "d7d17eed-472b-4fa8-8e63-3b21bb6cfd77",
+					"name": "fecha",
+					"datatype": "DATE",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"fk": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
+				},
+				{
+					"id": "92e96beb-c1bf-4272-9762-d6358ac4b557",
+					"name": "hora",
+					"datatype": "TIME",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"fk": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
+				},
+				{
+					"id": "5e388a26-45af-4e98-a5e5-705320d0b212",
+					"name": "rival",
+					"datatype": "VARCHAR",
+					"param": "100",
+					"pk": false,
+					"nn": true,
+					"fk": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
+				},
+				{
+					"id": "9bd3a5ab-ae51-45d1-bfce-2e1aa4d0110a",
+					"name": "lugar",
+					"datatype": "VARCHAR",
+					"param": "100",
+					"pk": false,
+					"nn": true,
+					"fk": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
+				},
+				{
+					"id": "616ec0c6-67b7-47c8-8431-ef1541256543",
+					"name": "resultado",
+					"datatype": "ENUM",
+					"param": "'ganado','empatado','perdido','suspendido''cancelado'",
+					"pk": false,
+					"nn": false,
+					"fk": false,
+					"comment": "",
+					"defaultvalue": "'por disputar'",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
+				},
+				{
+					"id": "859858ec-b9b1-4cf9-945a-429514e52482",
+					"name": "goles_a_favor",
+					"datatype": "INT",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"fk": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
+				},
+				{
+					"id": "3e58f19c-e4e1-4f0d-9289-f211e18992da",
+					"name": "goles_en_contra",
+					"datatype": "INT",
+					"param": "",
+					"pk": false,
+					"nn": false,
+					"fk": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
 				}
 			],
 			"relations": [
@@ -796,7 +884,7 @@
 		"705b1f80-c587-434c-ba9b-ac040a531137": {
 			"id": "705b1f80-c587-434c-ba9b-ac040a531137",
 			"visible": true,
-			"name": "jugador_partido",
+			"name": "JUGADOR_PARTIDO",
 			"desc": "",
 			"estimatedSize": "",
 			"cols": [
@@ -879,12 +967,99 @@
 			"temporary": false,
 			"ifnotexists": false,
 			"checkConstraints": []
+		},
+		"0694950b-d73d-468b-a05c-bc1f570c6455": {
+			"id": "0694950b-d73d-468b-a05c-bc1f570c6455",
+			"visible": true,
+			"name": "CUERPO_TECNICO_EQUIPO",
+			"desc": "",
+			"estimatedSize": "",
+			"cols": [
+				{
+					"id": "efbd8114-b90a-4971-ad38-ae806457a104",
+					"name": "CUERPO_TECNICO_id_cuerpo_tecnico",
+					"datatype": "INT",
+					"param": "",
+					"pk": true,
+					"nn": true,
+					"fk": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": ""
+				},
+				{
+					"id": "a7087542-5820-4bc3-bfa7-891c93f53f72",
+					"name": "EQUIPO_id_equipo",
+					"datatype": "INT",
+					"param": "",
+					"pk": true,
+					"nn": true,
+					"fk": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": ""
+				}
+			],
+			"relations": [
+				"e929ce2a-1395-4ad6-ae47-29c76d246d9f",
+				"e0d5c824-0933-4ef6-8610-689be651c2da"
+			],
+			"lines": [],
+			"keys": [
+				{
+					"id": "00cc5c39-c146-466b-b62e-c189ce99d8b3",
+					"name": "PRIMARY",
+					"isPk": true,
+					"cols": [
+						{
+							"id": "6e52c1ac-43af-47bc-9200-ecb201acc5b5",
+							"colid": "efbd8114-b90a-4971-ad38-ae806457a104"
+						},
+						{
+							"id": "6e734b27-15fd-4c06-8728-5b748c0d7a45",
+							"colid": "a7087542-5820-4bc3-bfa7-891c93f53f72"
+						}
+					]
+				}
+			],
+			"indexes": [],
+			"embeddable": false,
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": "",
+			"tabletype": "",
+			"collation": "",
+			"charset": "",
+			"rowformat": "",
+			"database": "",
+			"initautoinc": "",
+			"temporary": false,
+			"ifnotexists": false,
+			"checkConstraints": []
 		}
 	},
 	"relations": {
 		"af00558f-6686-446b-9eb9-24f41ae882ab": {
 			"id": "af00558f-6686-446b-9eb9-24f41ae882ab",
-			"name": "EQUIPO_JUGADOR",
+			"name": "FK_EQUIPO_JUGADOR",
 			"desc": "",
 			"type": "identifying",
 			"parent_key": "03b9d2a0-de52-4a21-b60f-07fb00f38321",
@@ -907,34 +1082,9 @@
 			"generateCustomCode": true,
 			"customCode": ""
 		},
-		"31bc1d7f-b989-4e4e-a510-9f211a4bb247": {
-			"id": "31bc1d7f-b989-4e4e-a510-9f211a4bb247",
-			"name": "EQUIPO_CUERPO_TECNICO",
-			"desc": "",
-			"type": "identifying",
-			"parent_key": "03b9d2a0-de52-4a21-b60f-07fb00f38321",
-			"parent": "28bd2c69-78a5-445c-97ea-bc87d55857cd",
-			"child": "d455488b-2942-4e20-8df7-a8cb1e6b4373",
-			"c_mp": "true",
-			"c_mch": "true",
-			"c_p": "one",
-			"c_ch": "many",
-			"c_cp": "",
-			"c_cch": "",
-			"cols": [
-				{
-					"id": "cb2f09f4-289b-421f-9713-291de2df0e5f",
-					"parentcol": "ced323a4-f3ce-4236-88c3-2ed113b244c9",
-					"childcol": "5973b66d-ae70-4ac8-b204-3f5f98eac9ce"
-				}
-			],
-			"generate": true,
-			"generateCustomCode": true,
-			"customCode": ""
-		},
 		"ced1d1cb-d19c-43ab-b822-e82d1768d931": {
 			"id": "ced1d1cb-d19c-43ab-b822-e82d1768d931",
-			"name": "EQUIPO_PARTIDO",
+			"name": "FK_EQUIPO_PARTIDO",
 			"desc": "",
 			"type": "identifying",
 			"parent_key": "03b9d2a0-de52-4a21-b60f-07fb00f38321",
@@ -957,34 +1107,9 @@
 			"generateCustomCode": true,
 			"customCode": ""
 		},
-		"683dc80d-578f-47c0-81fa-4663b0110187": {
-			"id": "683dc80d-578f-47c0-81fa-4663b0110187",
-			"name": "JUGADOR_FICHA_MEDICA",
-			"desc": "",
-			"type": "identifying",
-			"parent_key": "d5e3f187-a97a-42c3-b916-8ffc9b0d0d23",
-			"parent": "60e91060-6937-4472-9b2a-4edee875c6a6",
-			"child": "497df008-f47c-4f42-98a1-de7184386fc4",
-			"c_mp": "true",
-			"c_mch": "true",
-			"c_p": "one",
-			"c_ch": "many",
-			"c_cp": "",
-			"c_cch": "",
-			"cols": [
-				{
-					"id": "76575a63-3f98-43bb-9464-8bbd8937ae4b",
-					"parentcol": "79e5f396-4c66-457f-bbf4-9ec1c5ac2f0a",
-					"childcol": "3c8ded6e-13ef-4682-b26c-df82fa33e1f2"
-				}
-			],
-			"generate": true,
-			"generateCustomCode": true,
-			"customCode": ""
-		},
 		"d863c711-7663-4511-95d7-1a52702aff1b": {
 			"id": "d863c711-7663-4511-95d7-1a52702aff1b",
-			"name": "JUGADOR_jugador_partido",
+			"name": "FK_JUGADOR_JUGADOR_PARTIDO",
 			"desc": "",
 			"type": "identifying",
 			"parent_key": "d5e3f187-a97a-42c3-b916-8ffc9b0d0d23",
@@ -1009,7 +1134,7 @@
 		},
 		"930b2751-c583-47fc-849d-599833596c00": {
 			"id": "930b2751-c583-47fc-849d-599833596c00",
-			"name": "PARTIDO_jugador_partido",
+			"name": "FK_PARTIDO_JUGADOR_PARTIDO",
 			"desc": "",
 			"type": "identifying",
 			"parent_key": "997834fc-6f63-4f83-bf1a-0cf98d42a310",
@@ -1026,6 +1151,81 @@
 					"id": "f6828b42-bb8f-4ef1-91c2-e66cd4b210c7",
 					"parentcol": "75f4671a-856e-4797-9298-fc17fb1c1039",
 					"childcol": "202e6206-d147-47fe-8cab-1a5e26fef6c5"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": ""
+		},
+		"ccb9c7c1-bcbf-4273-9039-06bda05d6a74": {
+			"id": "ccb9c7c1-bcbf-4273-9039-06bda05d6a74",
+			"name": "FK_JUGADOR_FICHA_MEDICA",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "d5e3f187-a97a-42c3-b916-8ffc9b0d0d23",
+			"parent": "60e91060-6937-4472-9b2a-4edee875c6a6",
+			"child": "497df008-f47c-4f42-98a1-de7184386fc4",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "one",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "18180bc6-81c7-466c-b750-80524767afd1",
+					"parentcol": "79e5f396-4c66-457f-bbf4-9ec1c5ac2f0a",
+					"childcol": "7fe9a9a7-dcce-4a98-86cc-3e9035d0ab6f"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": ""
+		},
+		"e929ce2a-1395-4ad6-ae47-29c76d246d9f": {
+			"id": "e929ce2a-1395-4ad6-ae47-29c76d246d9f",
+			"name": "FK_CUERPO_TECNICO_CUERPO_TECNICO_EQUIPO",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "d8482ee7-1185-49c9-a9d7-1752d4575ba7",
+			"parent": "d455488b-2942-4e20-8df7-a8cb1e6b4373",
+			"child": "0694950b-d73d-468b-a05c-bc1f570c6455",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "36b84c08-8950-4409-80fe-7712012b0592",
+					"parentcol": "c655ffea-8d77-4d7a-9ad7-f98650980da6",
+					"childcol": "efbd8114-b90a-4971-ad38-ae806457a104"
+				}
+			],
+			"generate": true,
+			"generateCustomCode": true,
+			"customCode": ""
+		},
+		"e0d5c824-0933-4ef6-8610-689be651c2da": {
+			"id": "e0d5c824-0933-4ef6-8610-689be651c2da",
+			"name": "FK_EQUIPO_CUERPO_TECNICO_EQUIPO",
+			"desc": "",
+			"type": "identifying",
+			"parent_key": "03b9d2a0-de52-4a21-b60f-07fb00f38321",
+			"parent": "28bd2c69-78a5-445c-97ea-bc87d55857cd",
+			"child": "0694950b-d73d-468b-a05c-bc1f570c6455",
+			"c_mp": "true",
+			"c_mch": "true",
+			"c_p": "one",
+			"c_ch": "many",
+			"c_cp": "",
+			"c_cch": "",
+			"cols": [
+				{
+					"id": "be7d4452-04eb-4e05-9a70-865ebab57b3b",
+					"parentcol": "ced323a4-f3ce-4236-88c3-2ed113b244c9",
+					"childcol": "a7087542-5820-4bc3-bfa7-891c93f53f72"
 				}
 			],
 			"generate": true,
@@ -1092,7 +1292,8 @@
 			"ignoreSystemDefaults": "yes",
 			"includeWarnings": "yes",
 			"includeCreationSql": "no"
-		}
+		},
+		"lastSaved": 1777307726755
 	},
 	"otherObjects": {},
 	"diagrams": {
@@ -1101,8 +1302,8 @@
 			"description": "",
 			"id": "c4fd6989-d746-4900-ae72-dadf89ca6440",
 			"keysgraphics": true,
-			"linegraphics": "detailed",
-			"zoom": 1,
+			"linegraphics": "basic_curved",
+			"zoom": 1.6,
 			"background": "transparent",
 			"lineColor": "transparent",
 			"isOpen": true,
@@ -1110,8 +1311,8 @@
 			"diagramItems": {
 				"28bd2c69-78a5-445c-97ea-bc87d55857cd": {
 					"referencedItemId": "28bd2c69-78a5-445c-97ea-bc87d55857cd",
-					"x": 330,
-					"y": 210,
+					"x": 934,
+					"y": 579,
 					"gHeight": 81,
 					"gWidth": 179,
 					"color": "#ffffff",
@@ -1133,8 +1334,8 @@
 				},
 				"60e91060-6937-4472-9b2a-4edee875c6a6": {
 					"referencedItemId": "60e91060-6937-4472-9b2a-4edee875c6a6",
-					"x": 733,
-					"y": 30,
+					"x": 543,
+					"y": 157,
 					"gHeight": 171,
 					"gWidth": 221,
 					"color": "#ffffff",
@@ -1156,8 +1357,8 @@
 				},
 				"497df008-f47c-4f42-98a1-de7184386fc4": {
 					"referencedItemId": "497df008-f47c-4f42-98a1-de7184386fc4",
-					"x": 995,
-					"y": 183,
+					"x": 902,
+					"y": 35,
 					"gHeight": 135,
 					"gWidth": 254,
 					"color": "#ffffff",
@@ -1179,10 +1380,10 @@
 				},
 				"d455488b-2942-4e20-8df7-a8cb1e6b4373": {
 					"referencedItemId": "d455488b-2942-4e20-8df7-a8cb1e6b4373",
-					"x": 67,
-					"y": 278,
-					"gHeight": 117,
-					"gWidth": 218,
+					"x": 945,
+					"y": 228,
+					"gHeight": 99,
+					"gWidth": 215,
 					"color": "#ffffff",
 					"background": "#03a9f4",
 					"resized": false,
@@ -1202,9 +1403,9 @@
 				},
 				"5e354b03-6715-4a3b-9881-f1e39f6ecda6": {
 					"referencedItemId": "5e354b03-6715-4a3b-9881-f1e39f6ecda6",
-					"x": 742,
-					"y": 330,
-					"gHeight": 135,
+					"x": 540,
+					"y": 434,
+					"gHeight": 189,
 					"gWidth": 218,
 					"color": "#ffffff",
 					"background": "#03a9f4",
@@ -1225,10 +1426,33 @@
 				},
 				"705b1f80-c587-434c-ba9b-ac040a531137": {
 					"referencedItemId": "705b1f80-c587-434c-ba9b-ac040a531137",
-					"x": 429,
-					"y": 559,
+					"x": 196,
+					"y": 369,
 					"gHeight": 63,
 					"gWidth": 231,
+					"color": "#ffffff",
+					"background": "#03a9f4",
+					"resized": false,
+					"autoExpand": true,
+					"backgroundOpacity": "10",
+					"collapsed": false,
+					"borderColor": "#666666",
+					"borderStyle": "none",
+					"borderWidth": 2,
+					"assetAspectRatio": "none",
+					"assetTextPosition": "right",
+					"assetShowText": true,
+					"areaHeaderDisplayed": true,
+					"areaHeaderColor": "transparent",
+					"areaHeaderBackground": "transparent",
+					"cardBackground": "transparent"
+				},
+				"0694950b-d73d-468b-a05c-bc1f570c6455": {
+					"referencedItemId": "0694950b-d73d-468b-a05c-bc1f570c6455",
+					"x": 893,
+					"y": 396,
+					"gHeight": 63,
+					"gWidth": 321,
 					"color": "#ffffff",
 					"background": "#03a9f4",
 					"resized": false,
@@ -1258,28 +1482,8 @@
 					"anchorDetailedEnd": "default",
 					"width": 2
 				},
-				"31bc1d7f-b989-4e4e-a510-9f211a4bb247": {
-					"referencedItemId": "31bc1d7f-b989-4e4e-a510-9f211a4bb247",
-					"color": "transparent",
-					"mode": "default",
-					"anchorStart": "default",
-					"anchorEnd": "default",
-					"anchorDetailedStart": "default",
-					"anchorDetailedEnd": "default",
-					"width": 2
-				},
 				"ced1d1cb-d19c-43ab-b822-e82d1768d931": {
 					"referencedItemId": "ced1d1cb-d19c-43ab-b822-e82d1768d931",
-					"color": "transparent",
-					"mode": "default",
-					"anchorStart": "default",
-					"anchorEnd": "default",
-					"anchorDetailedStart": "default",
-					"anchorDetailedEnd": "default",
-					"width": 2
-				},
-				"683dc80d-578f-47c0-81fa-4663b0110187": {
-					"referencedItemId": "683dc80d-578f-47c0-81fa-4663b0110187",
 					"color": "transparent",
 					"mode": "default",
 					"anchorStart": "default",
@@ -1300,6 +1504,36 @@
 				},
 				"930b2751-c583-47fc-849d-599833596c00": {
 					"referencedItemId": "930b2751-c583-47fc-849d-599833596c00",
+					"color": "transparent",
+					"mode": "default",
+					"anchorStart": "default",
+					"anchorEnd": "default",
+					"anchorDetailedStart": "default",
+					"anchorDetailedEnd": "default",
+					"width": 2
+				},
+				"ccb9c7c1-bcbf-4273-9039-06bda05d6a74": {
+					"referencedItemId": "ccb9c7c1-bcbf-4273-9039-06bda05d6a74",
+					"color": "transparent",
+					"mode": "default",
+					"anchorStart": "default",
+					"anchorEnd": "default",
+					"anchorDetailedStart": "default",
+					"anchorDetailedEnd": "default",
+					"width": 2
+				},
+				"e929ce2a-1395-4ad6-ae47-29c76d246d9f": {
+					"referencedItemId": "e929ce2a-1395-4ad6-ae47-29c76d246d9f",
+					"color": "transparent",
+					"mode": "default",
+					"anchorStart": "default",
+					"anchorEnd": "default",
+					"anchorDetailedStart": "default",
+					"anchorDetailedEnd": "default",
+					"width": 2
+				},
+				"e0d5c824-0933-4ef6-8610-689be651c2da": {
+					"referencedItemId": "e0d5c824-0933-4ef6-8610-689be651c2da",
 					"color": "transparent",
 					"mode": "default",
 					"anchorStart": "default",
@@ -1332,9 +1566,9 @@
 			"showDependencyCaptions": false,
 			"showColumns": true,
 			"showColumnDataTypes": true,
-			"showSampleData": false,
-			"showTableIndexes": false,
-			"showTableDescriptions": false,
+			"showSampleData": true,
+			"showTableIndexes": true,
+			"showTableDescriptions": true,
 			"showRelations": true,
 			"showLines": true,
 			"showDependencies": true,
@@ -1357,12 +1591,14 @@
 		"d455488b-2942-4e20-8df7-a8cb1e6b4373",
 		"5e354b03-6715-4a3b-9881-f1e39f6ecda6",
 		"705b1f80-c587-434c-ba9b-ac040a531137",
+		"0694950b-d73d-468b-a05c-bc1f570c6455",
 		"af00558f-6686-446b-9eb9-24f41ae882ab",
-		"31bc1d7f-b989-4e4e-a510-9f211a4bb247",
 		"ced1d1cb-d19c-43ab-b822-e82d1768d931",
-		"683dc80d-578f-47c0-81fa-4663b0110187",
 		"d863c711-7663-4511-95d7-1a52702aff1b",
-		"930b2751-c583-47fc-849d-599833596c00"
+		"930b2751-c583-47fc-849d-599833596c00",
+		"ccb9c7c1-bcbf-4273-9039-06bda05d6a74",
+		"e929ce2a-1395-4ad6-ae47-29c76d246d9f",
+		"e0d5c824-0933-4ef6-8610-689be651c2da"
 	],
 	"collapsedTreeItems": [],
 	"reverseStats": {}
