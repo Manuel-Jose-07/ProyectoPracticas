@@ -1,0 +1,5 @@
+package com.daw.controladores;
+
+public class ControladoresFicha_Medica {
+
+}

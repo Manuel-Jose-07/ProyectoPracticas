@@ -316,6 +316,27 @@
 					"estimatedSize": "",
 					"chosen": false,
 					"selected": false
+				},
+				{
+					"id": "4fc650ee-3038-4709-ac9d-89349c4fc5fe",
+					"name": "score",
+					"datatype": "DECIMAL",
+					"param": "5,2",
+					"pk": false,
+					"nn": false,
+					"fk": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": ""
 				}
 			],
 			"relations": [
@@ -828,7 +849,7 @@
 					"datatype": "ENUM",
 					"param": "'ganado','empatado','perdido','suspendido','cancelado','por disputar'",
 					"pk": false,
-					"nn": false,
+					"nn": true,
 					"fk": false,
 					"comment": "",
 					"defaultvalue": "'por disputar'",
@@ -1459,7 +1480,7 @@
 			"includeWarnings": "yes",
 			"includeCreationSql": "no"
 		},
-		"lastSaved": 1777896151263
+		"lastSaved": 1777908792557
 	},
 	"otherObjects": {},
 	"diagrams": {
@@ -1469,7 +1490,7 @@
 			"id": "c4fd6989-d746-4900-ae72-dadf89ca6440",
 			"keysgraphics": true,
 			"linegraphics": "basic_curved",
-			"zoom": 0.7,
+			"zoom": 1.1,
 			"background": "transparent",
 			"lineColor": "transparent",
 			"isOpen": true,
@@ -1500,9 +1521,9 @@
 				},
 				"60e91060-6937-4472-9b2a-4edee875c6a6": {
 					"referencedItemId": "60e91060-6937-4472-9b2a-4edee875c6a6",
-					"x": 384,
-					"y": 176,
-					"gHeight": 153,
+					"x": 386,
+					"y": 182,
+					"gHeight": 171,
 					"gWidth": 221,
 					"color": "#ffffff",
 					"background": "#03a9f4",
