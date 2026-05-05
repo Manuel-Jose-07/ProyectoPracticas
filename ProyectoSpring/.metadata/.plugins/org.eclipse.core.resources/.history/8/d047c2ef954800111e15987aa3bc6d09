@@ -1,0 +1,15 @@
+package com.daw.controladores;
+
+import java.time.LocalDate;
+
+public class Jugador {
+	 
+	private Integer id_jugador;
+	private String nombre;
+	private LocalDate fecha_nacimiento;
+	private enumPosicion posicion;
+	private Boolean activo;
+	private Integer dorsal;
+	private Float score;
+	private Integer id_equipo;
+}

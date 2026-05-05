@@ -1,0 +1,51 @@
+package com.daw.controladores;
+
+public class Cuerpo_Tecnico {
+
+	private Integer id_cuerpo_tecnico;
+	private String nombre;
+	private enumCargo cargo;
+	private Boolean activo;
+	
+	public Cuerpo_Tecnico(Integer id_cuerpo_tecnico, String nombre, enumCargo cargo, Boolean activo) {
+		this.id_cuerpo_tecnico = id_cuerpo_tecnico;
+		this.nombre = nombre;
+		this.cargo = cargo;
+		this.activo = activo;
+	}
+
+	public Integer getId_cuerpo_tecnico() {
+		return id_cuerpo_tecnico;
+	}
+
+	public void setId_cuerpo_tecnico(Integer id_cuerpo_tecnico) {
+		this.id_cuerpo_tecnico = id_cuerpo_tecnico;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public enumCargo getCargo() {
+		return cargo;
+	}
+
+	public void setCargo(enumCargo cargo) {
+		this.cargo = cargo;
+	}
+
+	public Boolean getActivo() {
+		return activo;
+	}
+
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+	
+	
+	
+}

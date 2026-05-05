@@ -1,0 +1,9 @@
+package com.daw.controladores;
+
+public class Jugador {
+	 
+	private Integer id_jugador;
+	private String nombre;
+	private String password;
+	private Boolean esAdmin;
+}

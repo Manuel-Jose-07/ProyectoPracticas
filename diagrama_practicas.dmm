@@ -229,7 +229,7 @@
 					"id": "0b13e3ab-2ada-4acc-a876-7602bac1359c",
 					"name": "posicion",
 					"datatype": "ENUM",
-					"param": "'portero','defensa','mediocentro','delantero'",
+					"param": "_nacimeinto",
 					"pk": false,
 					"nn": false,
 					"fk": false,
@@ -1480,7 +1480,7 @@
 			"includeWarnings": "yes",
 			"includeCreationSql": "no"
 		},
-		"lastSaved": 1777908792557
+		"lastSaved": 1777912853781
 	},
 	"otherObjects": {},
 	"diagrams": {

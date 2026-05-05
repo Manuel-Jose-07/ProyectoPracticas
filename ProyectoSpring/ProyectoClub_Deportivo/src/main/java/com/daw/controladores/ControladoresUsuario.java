@@ -17,22 +17,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ControladoresUsuario {
 
-	private String filtroContieneTexto(String texto) {
-		return (texto==null) ? "%%" : '%'+ texto.replace("'", "''") + '%';
+	private String TraduceError(String exceptionString) {
+
+		return "No se traducir todavía";
+
 	}
-	
+
+	private String filtroContieneTexto(String texto) {
+		return (texto == null) ? "%%" : '%' + texto.replace("'", "''") + '%';
+	}
+
 	@GetMapping("/busquedaUsuarios")
-	public ResponseEntity<?> buscarUsuarios(@RequestParam(required = false) String nombre, @RequestParam(required = false) Boolean esAdmin) {
+	public ResponseEntity<?> buscarUsuarios(@RequestParam(required = false) String nombre,
+			@RequestParam(required = false) Boolean esAdmin) {
 		List<Usuario> resultado = new ArrayList<>();
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario", "usuario");
+			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
+					"usuario");
 			Statement stmt = conn.createStatement();
-			String sentencia = "SELECT u.id_usuario, u.nombre, u.password, u.esAdmin "
-					+ " FROM usuario u "
-					+ " WHERE (" + (nombre == null ? "TRUE" : "FALSE") + " OR UPPER(u.nombre) LIKE UPPER('"+filtroContieneTexto(nombre)+"')) " 
-					+ "   AND (" + (esAdmin == null ? "TRUE" : "FALSE") + " OR u.esAdmin = " + esAdmin + ") ";
-			System.out.println(sentencia);
+			String sentencia = "SELECT u.id_usuario, u.nombre, u.password, u.esAdmin " + " FROM usuario u " + " WHERE ("
+					+ (nombre == null ? "TRUE" : "FALSE") + " OR UPPER(u.nombre) LIKE UPPER('"
+					+ filtroContieneTexto(nombre) + "')) " + "   AND (" + (esAdmin == null ? "TRUE" : "FALSE")
+					+ " OR u.esAdmin = " + esAdmin + ") ";
 			ResultSet rs = stmt.executeQuery(sentencia);
 			while (rs.next()) {
 				Integer idBD = rs.getInt("u.id_usuario");
@@ -41,16 +48,20 @@ public class ControladoresUsuario {
 				Boolean esAdminBD = rs.getBoolean("u.esAdmin");
 				resultado.add(new Usuario(idBD, nombreBD, passwordBD, esAdminBD));
 			}
-			
+
 			rs.close();
 			stmt.close();
 			conn.close();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			// 
+			return ResponseEntity.internalServerError().body("ClassNotFoundException");
 		} catch (SQLException e) {
 			e.printStackTrace();
-			//
+			return ResponseEntity.internalServerError().body(TraduceError(e.toString()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("general Exception");
+
 		}
 		return ResponseEntity.ok().body(resultado);
 	}
@@ -74,11 +85,15 @@ public class ControladoresUsuario {
 			conn.close();
 
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("ClassNotFoundException");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return ResponseEntity.internalServerError().body(TraduceError(e.toString()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("general Exception");
+
 		}
 
 		return ResponseEntity.ok().body("La creación se ha ejecutado con éxito");
@@ -101,11 +116,15 @@ public class ControladoresUsuario {
 			conn.close();
 
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("ClassNotFoundException");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return ResponseEntity.internalServerError().body(TraduceError(e.toString()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("general Exception");
+
 		}
 		return ResponseEntity.ok().body("La eliminación se ha ejecutado con éxito");
 	}
@@ -127,11 +146,15 @@ public class ControladoresUsuario {
 			conn.close();
 
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("ClassNotFoundException");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return ResponseEntity.internalServerError().body(TraduceError(e.toString()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("general Exception");
+
 		}
 
 		return ResponseEntity.ok().body("La modificación se ha ejecutado con éxito");

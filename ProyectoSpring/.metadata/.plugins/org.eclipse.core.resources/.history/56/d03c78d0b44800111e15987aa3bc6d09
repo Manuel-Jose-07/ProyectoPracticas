@@ -1,0 +1,16 @@
+package com.daw.controladores;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+public class Partido {
+
+	private Integer id_partido;
+	private LocalDate fecha;
+	private LocalTime hora;
+	private String rival;
+	private String lugar;
+	private enumResultado resultado;
+	private Integer goles_a_favor;
+	private Integer goles_en_contra;
+}
