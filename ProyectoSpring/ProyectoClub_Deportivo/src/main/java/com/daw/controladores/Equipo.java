@@ -5,10 +5,10 @@ public class Equipo {
 	private Integer id_equipo;
 	private String codigo;
 	private String descripcion;
-	private enumCategoria categoria;
+	private String categoria;
 	private String letra;
 
-	public Equipo(Integer id_equipo, String codigo, String descripcion, enumCategoria categoria, String letra) {
+	public Equipo(Integer id_equipo, String codigo, String descripcion, String categoria, String letra) {
 		this.id_equipo = id_equipo;
 		this.codigo = codigo;
 		this.descripcion = descripcion;
@@ -40,11 +40,11 @@ public class Equipo {
 		this.descripcion = descripcion;
 	}
 
-	public enumCategoria getCategoria() {
+	public String getCategoria() {
 		return categoria;
 	}
 
-	public void setCategoria(enumCategoria categoria) {
+	public void setCategoria(String categoria) {
 		this.categoria = categoria;
 	}
 

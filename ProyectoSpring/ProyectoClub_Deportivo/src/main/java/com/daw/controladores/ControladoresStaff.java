@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class ControladoresFicha_Medica {
+public class ControladoresStaff {
 
 	private String TraduceError(String exceptionString) {
 		return "No se traducir todavía";
@@ -26,29 +26,26 @@ public class ControladoresFicha_Medica {
 		return (texto == null) ? "'%%'" : "'%" + texto.replace("'", "''") + "%'";
 	}
 
-	@GetMapping("/busquedaFichasMedicas")
-	public ResponseEntity<?> busquedaFichasMedicas(@RequestParam(required = false) String codigo,
-			@RequestParam(required = false) Integer JUGADOR_id_jugador) {
-		List<Ficha_Medica> resultado = new ArrayList<>();
+	@GetMapping("/busquedaStaff")
+	public ResponseEntity<?> busquedaStaff(@RequestParam(required = false) String nombre,
+			@RequestParam(required = false) String cargo) {
+		List<Staff> resultado = new ArrayList<>();
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
 					"usuario");
 			Statement stmt = conn.createStatement();
-			String sentencia = "SELECT f.id_ficha_medica, f.JUGADOR_id_jugador, f.codigo, f.descripcion, f.grupo_sanguineo, f.alergias, f.apto "
-					+ " FROM FICHA_MEDICA f "
-					+ " WHERE (" + (codigo == null ? "TRUE" : "FALSE") + " OR UPPER(f.codigo) LIKE UPPER(" + filtroContieneTexto(codigo) + ")) "
-					+ "   AND (" + (JUGADOR_id_jugador == null ? "TRUE" : "FALSE") + " OR f.JUGADOR_id_jugador = " + JUGADOR_id_jugador + ") ";
+			String sentencia = "SELECT s.id_staff, s.nombre, s.cargo, s.activo "
+					+ " FROM STAFF s "
+					+ " WHERE (" + (nombre == null ? "TRUE" : "FALSE") + " OR UPPER(s.nombre) LIKE UPPER(" + filtroContieneTexto(nombre) + ")) "
+					+ "   AND (" + (cargo == null ? "TRUE" : "FALSE") + " OR UPPER(s.cargo) LIKE UPPER(" + filtroContieneTexto(cargo) + ")) ";
 			ResultSet rs = stmt.executeQuery(sentencia);
 			while (rs.next()) {
-				Integer idBD = rs.getInt("f.id_ficha_medica");
-				Integer jugadorIdBD = rs.getInt("f.JUGADOR_id_jugador");
-				String codigoBD = rs.getString("f.codigo");
-				String descripcionBD = rs.getString("f.descripcion");
-				String grupoSanguineoBD = rs.getString("f.grupo_sanguineo");
-				String alergiasBD = rs.getString("f.alergias");
-				Boolean aptoBD = rs.getBoolean("f.apto");
-				resultado.add(new Ficha_Medica(idBD, jugadorIdBD, codigoBD, descripcionBD, grupoSanguineoBD, alergiasBD, aptoBD));
+				Integer idBD = rs.getInt("s.id_staff");
+				String nombreBD = rs.getString("s.nombre");
+				String cargoBD = rs.getString("s.cargo");
+				Boolean activoBD = rs.getBoolean("s.activo");
+				resultado.add(new Staff(idBD, nombreBD, cargoBD, activoBD));
 			}
 			rs.close();
 			stmt.close();
@@ -66,22 +63,18 @@ public class ControladoresFicha_Medica {
 		return ResponseEntity.ok().body(resultado);
 	}
 
-	@GetMapping("/crearFichaMedica")
-	public ResponseEntity<?> crearFichaMedica(Integer JUGADOR_id_jugador, String codigo, String descripcion,
-			String grupo_sanguineo, String alergias, Boolean apto) {
+	@GetMapping("/crearStaff")
+	public ResponseEntity<?> crearStaff(String nombre, String cargo, Boolean activo) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
 					"usuario");
 
 			PreparedStatement pstmt = conn.prepareStatement(
-					"INSERT INTO FICHA_MEDICA (JUGADOR_id_jugador, codigo, descripcion, grupo_sanguineo, alergias, apto) VALUES (?,?,?,?,?,?)");
-			pstmt.setInt(1, JUGADOR_id_jugador);
-			pstmt.setString(2, codigo);
-			pstmt.setString(3, descripcion);
-			pstmt.setString(4, grupo_sanguineo);
-			pstmt.setString(5, alergias);
-			pstmt.setBoolean(6, apto);
+					"INSERT INTO STAFF (nombre, cargo, activo) VALUES (?,?,?)");
+			pstmt.setString(1, nombre);
+			pstmt.setString(2, cargo);
+			pstmt.setBoolean(3, activo);
 			pstmt.executeUpdate();
 			pstmt.close();
 			conn.close();
@@ -98,21 +91,19 @@ public class ControladoresFicha_Medica {
 		return ResponseEntity.ok().body("La creación se ha ejecutado con éxito");
 	}
 
-	@GetMapping("/modificarFichaMedica")
-	public ResponseEntity<?> modificarFichaMedica(Integer id_ficha_medica, String descripcion,
-			String grupo_sanguineo, String alergias, Boolean apto) {
+	@GetMapping("/modificarStaff")
+	public ResponseEntity<?> modificarStaff(Integer id_staff, String nombre, String cargo, Boolean activo) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
 					"usuario");
 
 			PreparedStatement pstmt = conn.prepareStatement(
-					"UPDATE FICHA_MEDICA SET descripcion=?, grupo_sanguineo=?, alergias=?, apto=? WHERE id_ficha_medica=?");
-			pstmt.setString(1, descripcion);
-			pstmt.setString(2, grupo_sanguineo);
-			pstmt.setString(3, alergias);
-			pstmt.setBoolean(4, apto);
-			pstmt.setInt(5, id_ficha_medica);
+					"UPDATE STAFF SET nombre=?, cargo=?, activo=? WHERE id_staff=?");
+			pstmt.setString(1, nombre);
+			pstmt.setString(2, cargo);
+			pstmt.setBoolean(3, activo);
+			pstmt.setInt(4, id_staff);
 			pstmt.executeUpdate();
 			pstmt.close();
 			conn.close();
@@ -129,15 +120,15 @@ public class ControladoresFicha_Medica {
 		return ResponseEntity.ok().body("La modificación se ha ejecutado con éxito");
 	}
 
-	@GetMapping("/eliminarFichaMedica")
-	public ResponseEntity<?> eliminarFichaMedica(Integer id_ficha_medica) {
+	@GetMapping("/eliminarStaff")
+	public ResponseEntity<?> eliminarStaff(Integer id_staff) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
 					"usuario");
 
-			PreparedStatement pstmt = conn.prepareStatement("DELETE FROM FICHA_MEDICA WHERE id_ficha_medica=?");
-			pstmt.setInt(1, id_ficha_medica);
+			PreparedStatement pstmt = conn.prepareStatement("DELETE FROM STAFF WHERE id_staff=?");
+			pstmt.setInt(1, id_staff);
 			pstmt.executeUpdate();
 			pstmt.close();
 			conn.close();

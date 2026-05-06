@@ -1,13 +1,13 @@
 package com.daw.controladores;
 
-public class Cuerpo_Tecnico {
+public class Staff {
 
 	private Integer id_cuerpo_tecnico;
 	private String nombre;
-	private enumCargo cargo;
+	private String cargo;
 	private Boolean activo;
 
-	public Cuerpo_Tecnico(Integer id_cuerpo_tecnico, String nombre, enumCargo cargo, Boolean activo) {
+	public Staff(Integer id_cuerpo_tecnico, String nombre, String cargo, Boolean activo) {
 		this.id_cuerpo_tecnico = id_cuerpo_tecnico;
 		this.nombre = nombre;
 		this.cargo = cargo;
@@ -30,11 +30,11 @@ public class Cuerpo_Tecnico {
 		this.nombre = nombre;
 	}
 
-	public enumCargo getCargo() {
+	public String getCargo() {
 		return cargo;
 	}
 
-	public void setCargo(enumCargo cargo) {
+	public void setCargo(String cargo) {
 		this.cargo = cargo;
 	}
 

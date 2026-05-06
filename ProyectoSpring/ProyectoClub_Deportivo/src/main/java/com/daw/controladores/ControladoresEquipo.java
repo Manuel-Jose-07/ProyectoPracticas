@@ -1,190 +1,158 @@
 package com.daw.controladores;
 
-	import java.sql.Connection;
-	import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-	import java.sql.SQLException;
-	import java.sql.Statement;
-import java.time.LocalDate;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
-	import java.util.List;
+import java.util.List;
 
-	import org.springframework.http.ResponseEntity;
-	import org.springframework.web.bind.annotation.GetMapping;
-	import org.springframework.web.bind.annotation.RequestParam;
-	import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-	@RestController
-	public class ControladoresEquipo {
+@RestController
+public class ControladoresEquipo {
 
-		private String TraduceError(String exceptionString) {
-
-			return "No se traducir todavía";
-
-		}
-
-		private String filtroContieneTexto(String texto) {
-			// devuelve: "'%%" ó "'%texto%'" 
-			return (texto == null) 
-					? "'%%'" 
-					: "'%" + texto.replace("'", "''") + "%'";
-		}
-
-		
-
-		private String entrecomilla(String texto) {
-			// devuelve: NULL ó "'texto'" 
-			return (texto == null) ? "NULL" : "'" + texto.replace("'", "''") + "'";
-		}
-
-		
-		@GetMapping("/busquedaEquipos")
-		public ResponseEntity<?> busquedaEquipos(
-				@RequestParam(required = false) enumCategoria categoria,
-				@RequestParam(required = false) String letra
-		) {
-			// comproboar si es un usuario que ha pasado por login (AUTENTICAR)
-			// comprobar si ese usuario tiene permiso para busquedaEquipos (AUTORIZAR)
-			List<Equipo> resultado = new ArrayList<>();
-			try {
-				Class.forName("com.mysql.cj.jdbc.Driver");
-				Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
-						"usuario");
-				Statement stmt = conn.createStatement();
-				String sentencia = "SELECT e.id_equipo, e.codigo, e.descripcion, e.categoria, e.letra "
-						+ " FROM equipo e " 
-						+ " WHERE (" + (categoria == null ? "TRUE" : "FALSE") + " OR UPPER(e.categoria) = UPPER(" + entrecomilla(categoria.toString()) + ")) " 
-						+ "   AND (" + (letra == null ? "TRUE" : "FALSE") + " OR UPPER(e.letra) = UPPER(" + entrecomilla(letra) + ")) ";
-				ResultSet rs = stmt.executeQuery(sentencia);
-
-				while (rs.next()) {
-					Integer idBD = rs.getInt("e.id_equipo");
-					String codigoBD = rs.getString("e.codigo");
-					String descripcionBD = rs.getString("e.descripcion");
-					String categoriaString = rs.getString("categoria");
-					enumCategoria categoriaBD = enumCategoria.valueOf(categoriaString);
-					String letraBD = rs.getString("letra");
-					resultado.add(new Equipo(idBD, codigoBD, descripcionBD, categoriaBD, letraBD));
-				}
-
-				rs.close();
-				stmt.close();
-				conn.close();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-				return ResponseEntity.internalServerError().body("ClassNotFoundException");
-			} catch (SQLException e) {
-				e.printStackTrace();
-				return ResponseEntity.internalServerError().body(TraduceError(e.toString()));
-			} catch (Exception e) {
-				e.printStackTrace();
-				return ResponseEntity.internalServerError().body("general Exception");
-
-			}
-			return ResponseEntity.ok().body(resultado);
-		}
-		
-		@GetMapping("/crearEquipo")
-		public ResponseEntity<?> crearEquipo(String codigo, String descripcion, enumCategoria categoria, String letra) {
-
-			try {
-				Class.forName("com.mysql.cj.jdbc.Driver");
-				Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
-						"usuario");
-
-				PreparedStatement pstmt = conn.prepareStatement(
-						"INSERT INTO equipo (codigo, descripcion, categoria, letra) VALUES (?,?,?,?)");
-				pstmt.setString(1, codigo);
-				pstmt.setString(2, descripcion);
-				pstmt.setString(3, categoria.toString());
-				pstmt.setString(4, letra);
-				pstmt.executeUpdate();
-				pstmt.close();
-				conn.close();
-
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-				return ResponseEntity.internalServerError().body("ClassNotFoundException");
-			} catch (SQLException e) {
-				e.printStackTrace();
-				return ResponseEntity.internalServerError().body(TraduceError(e.toString()));
-			} catch (Exception e) {
-				e.printStackTrace();
-				return ResponseEntity.internalServerError().body("general Exception");
-
-			}
-
-			return ResponseEntity.ok().body("La creación se ha ejecutado con éxito");
-		}
-		
-		@GetMapping("/eliminarEquipo")
-		public ResponseEntity<?> eliminarEquipo(String codigo) {
-			try {
-
-				Class.forName("com.mysql.cj.jdbc.Driver");
-				Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
-						"usuario");
-
-				PreparedStatement pstmt = conn
-						.prepareStatement("DELETE FROM equipo WHERE codigo=?");
-				pstmt.setString(1, codigo);
-				pstmt.executeUpdate();
-
-				pstmt.close();
-				conn.close();
-
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-				return ResponseEntity.internalServerError().body("ClassNotFoundException");
-			} catch (SQLException e) {
-				e.printStackTrace();
-				return ResponseEntity.internalServerError().body(TraduceError(e.toString()));
-			} catch (Exception e) {
-				e.printStackTrace();
-				return ResponseEntity.internalServerError().body("general Exception");
-
-			}
-			return ResponseEntity.ok().body("La eliminación se ha ejecutado con éxito");
-		}
-		
-		@GetMapping("/modificarEquipo")
-		public ResponseEntity<?> modificarEquipo(Integer id_equipo, String codigo, String descripcion, enumCategoria categoria,
-				String letra) {
-			try {
-
-				Class.forName("com.mysql.cj.jdbc.Driver");
-				Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
-						"usuario");
-
-				PreparedStatement pstmt = conn.prepareStatement(
-						"UPDATE equipo SET codigo=?, descripcion=?, categoria=?, letra=?" + " WHERE id_equipo=?");
-
-				pstmt.setString(1, codigo);
-				pstmt.setString(2, descripcion);
-				pstmt.setString(3, categoria.toString());
-				pstmt.setString(4, letra);
-				pstmt.setInt(5, id_equipo);
-				pstmt.executeUpdate();
-
-				pstmt.close();
-				conn.close();
-
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-				return ResponseEntity.internalServerError().body("ClassNotFoundException");
-			} catch (SQLException e) {
-				e.printStackTrace();
-				return ResponseEntity.internalServerError().body(TraduceError(e.toString()));
-			} catch (Exception e) {
-				e.printStackTrace();
-				return ResponseEntity.internalServerError().body("general Exception");
-
-			}
-
-			return ResponseEntity.ok().body("La modificación se ha ejecutado con éxito");
-
-		}
-
+	private String TraduceError(String exceptionString) {
+		return "No se traducir todavía";
 	}
-		
+
+	private String filtroContieneTexto(String texto) {
+		// devuelve: "'%%" ó "'%texto%'" 
+		return (texto == null) 
+				? "'%%'" 
+				: "'%" + texto.replace("'", "''") + "%'";
+	}
+	private String entrecomilla(String texto) {
+		// devuelve: NULL ó "'texto'" 
+		return (texto == null) ? "NULL" : "'" + texto.replace("'", "''") + "'";
+	}
+
+	@GetMapping("/busquedaEquipos")
+	public ResponseEntity<?> busquedaEquipos(@RequestParam(required = false) String codigo,
+			@RequestParam(required = false) String categoria) {
+		List<Equipo> resultado = new ArrayList<>();
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
+					"usuario");
+			Statement stmt = conn.createStatement();
+			String sentencia = "SELECT e.id_equipo, e.codigo, e.descripcion, e.categoria, e.grupo "
+					+ " FROM EQUIPO e "
+					+ " WHERE (" + (codigo == null ? "TRUE" : "FALSE") + " OR UPPER(e.codigo) LIKE UPPER(" + filtroContieneTexto(codigo) + ")) "
+					+ "   AND (" + (categoria == null ? "TRUE" : "FALSE") + " OR UPPER(e.categoria) LIKE UPPER(" + filtroContieneTexto(categoria) + ")) ";
+			ResultSet rs = stmt.executeQuery(sentencia);
+			while (rs.next()) {
+				Integer idBD = rs.getInt("e.id_equipo");
+				String codigoBD = rs.getString("e.codigo");
+				String descripcionBD = rs.getString("e.descripcion");
+				String categoriaBD = rs.getString("e.categoria");
+				String grupoBD = rs.getString("e.grupo");
+				resultado.add(new Equipo(idBD, codigoBD, descripcionBD, categoriaBD, grupoBD));
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("ClassNotFoundException");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body(TraduceError(e.toString()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("general Exception");
+		}
+		return ResponseEntity.ok().body(resultado);
+	}
+
+	@GetMapping("/crearEquipo")
+	public ResponseEntity<?> crearEquipo(String codigo, String descripcion, String categoria, String grupo) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
+					"usuario");
+
+			PreparedStatement pstmt = conn.prepareStatement(
+					"INSERT INTO EQUIPO (codigo, descripcion, categoria, grupo) VALUES (?,?,?,?)");
+			pstmt.setString(1, codigo);
+			pstmt.setString(2, descripcion);
+			pstmt.setString(3, categoria);
+			pstmt.setString(4, grupo);
+			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("ClassNotFoundException");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body(TraduceError(e.toString()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("general Exception");
+		}
+		return ResponseEntity.ok().body("La creación se ha ejecutado con éxito");
+	}
+
+	@GetMapping("/modificarEquipo")
+	public ResponseEntity<?> modificarEquipo(Integer id_equipo, String codigo, String descripcion,
+			String categoria, String grupo) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
+					"usuario");
+
+			PreparedStatement pstmt = conn.prepareStatement(
+					"UPDATE EQUIPO SET codigo=?, descripcion=?, categoria=?, grupo=? WHERE id_equipo=?");
+			pstmt.setString(1, codigo);
+			pstmt.setString(2, descripcion);
+			pstmt.setString(3, categoria);
+			pstmt.setString(4, grupo);
+			pstmt.setInt(5, id_equipo);
+			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("ClassNotFoundException");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body(TraduceError(e.toString()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("general Exception");
+		}
+		return ResponseEntity.ok().body("La modificación se ha ejecutado con éxito");
+	}
+
+	@GetMapping("/eliminarEquipo")
+	public ResponseEntity<?> eliminarEquipo(Integer id_equipo) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
+					"usuario");
+
+			PreparedStatement pstmt = conn.prepareStatement("DELETE FROM EQUIPO WHERE id_equipo=?");
+			pstmt.setInt(1, id_equipo);
+			pstmt.executeUpdate();
+			pstmt.close();
+			conn.close();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("ClassNotFoundException");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body(TraduceError(e.toString()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("general Exception");
+		}
+		return ResponseEntity.ok().body("La eliminación se ha ejecutado con éxito");
+	}
+
+}

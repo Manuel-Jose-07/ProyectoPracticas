@@ -24,7 +24,10 @@ public class ControladoresUsuario {
 	}
 
 	private String filtroContieneTexto(String texto) {
-		return (texto == null) ? "%%" : '%' + texto.replace("'", "''") + '%';
+		// devuelve: "'%%" ó "'%texto%'" 
+		return (texto == null) 
+				? "'%%'" 
+				: "'%" + texto.replace("'", "''") + "%'";
 	}
 
 	@GetMapping("/busquedaUsuarios")
@@ -37,8 +40,8 @@ public class ControladoresUsuario {
 					"usuario");
 			Statement stmt = conn.createStatement();
 			String sentencia = "SELECT u.id_usuario, u.nombre, u.password, u.esAdmin " + " FROM usuario u " + " WHERE ("
-					+ (nombre == null ? "TRUE" : "FALSE") + " OR UPPER(u.nombre) LIKE UPPER('"
-					+ filtroContieneTexto(nombre) + "')) " + "   AND (" + (esAdmin == null ? "TRUE" : "FALSE")
+					+ (nombre == null ? "TRUE" : "FALSE") + " OR UPPER(u.nombre) LIKE UPPER("
+					+ filtroContieneTexto(nombre) + ")) " + "   AND (" + (esAdmin == null ? "TRUE" : "FALSE")
 					+ " OR u.esAdmin = " + esAdmin + ") ";
 			ResultSet rs = stmt.executeQuery(sentencia);
 			while (rs.next()) {

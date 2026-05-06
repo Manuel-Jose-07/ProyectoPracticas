@@ -180,6 +180,29 @@
 					"selected": false
 				},
 				{
+					"id": "8f804531-10bc-431c-bad2-b9862d0062ed",
+					"name": "EQUIPO_id_equipo",
+					"datatype": "INT",
+					"param": "",
+					"pk": false,
+					"nn": true,
+					"fk": true,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": "",
+					"chosen": false,
+					"selected": false
+				},
+				{
 					"id": "329e6950-1daf-4b5f-9d4e-6b837cb7ea14",
 					"name": "nombre",
 					"datatype": "VARCHAR",
@@ -256,29 +279,6 @@
 					"pk": false,
 					"nn": true,
 					"fk": false,
-					"comment": "",
-					"defaultvalue": "",
-					"data": "",
-					"after": "",
-					"autoinc": false,
-					"collation": "",
-					"charset": "",
-					"binary": false,
-					"zerofill": false,
-					"unsigned": false,
-					"enum": "",
-					"estimatedSize": "",
-					"chosen": false,
-					"selected": false
-				},
-				{
-					"id": "8f804531-10bc-431c-bad2-b9862d0062ed",
-					"name": "EQUIPO_id_equipo",
-					"datatype": "INT",
-					"param": "",
-					"pk": false,
-					"nn": true,
-					"fk": true,
 					"comment": "",
 					"defaultvalue": "",
 					"data": "",
@@ -1480,7 +1480,7 @@
 			"includeWarnings": "yes",
 			"includeCreationSql": "no"
 		},
-		"lastSaved": 1778062986422
+		"lastSaved": 1778063111510
 	},
 	"otherObjects": {},
 	"diagrams": {
