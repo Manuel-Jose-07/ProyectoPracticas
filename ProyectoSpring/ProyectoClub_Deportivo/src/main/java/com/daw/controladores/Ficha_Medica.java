@@ -10,8 +10,8 @@ public class Ficha_Medica {
 	private String alergias;
 	private Boolean apto;
 
-	public Ficha_Medica(Integer id_ficha, Integer JUGADOR_id_jugador, String codigo, String descripcion, String grupo_sanguineo, String alergias,
-			Boolean apto) {
+	public Ficha_Medica(Integer id_ficha, Integer JUGADOR_id_jugador, String codigo, String descripcion,
+			String grupo_sanguineo, String alergias, Boolean apto) {
 		this.id_ficha = id_ficha;
 		this.codigo = codigo;
 		this.descripcion = descripcion;
@@ -28,6 +28,7 @@ public class Ficha_Medica {
 	public void setId_ficha(Integer id_ficha) {
 		this.id_ficha = id_ficha;
 	}
+
 	public Integer getJUGADOR_id_jugador() {
 		return JUGADOR_id_jugador;
 	}
@@ -35,6 +36,7 @@ public class Ficha_Medica {
 	public void setJUGADOR_id_jugador(Integer JUGADOR_id_jugador) {
 		this.JUGADOR_id_jugador = JUGADOR_id_jugador;
 	}
+
 	public String getCodigo() {
 		return codigo;
 	}
@@ -74,7 +76,5 @@ public class Ficha_Medica {
 	public void setApto(Boolean apto) {
 		this.apto = apto;
 	}
-
-	
 
 }

@@ -39,16 +39,16 @@ public class ControladoresUsuario {
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
 					"usuario");
 			Statement stmt = conn.createStatement();
-			String sentencia = "SELECT u.id_usuario, u.nombre, u.password, u.esAdmin " + " FROM usuario u " + " WHERE ("
-					+ (nombre == null ? "TRUE" : "FALSE") + " OR UPPER(u.nombre) LIKE UPPER("
-					+ filtroContieneTexto(nombre) + ")) " + "   AND (" + (esAdmin == null ? "TRUE" : "FALSE")
-					+ " OR u.esAdmin = " + esAdmin + ") ";
+			String sentencia = "SELECT id_usuario, nombre, password, esAdmin " 
+					+ " FROM usuario" 
+					+ " WHERE (" + (nombre == null ? "TRUE" : "FALSE") + " OR UPPER(nombre) LIKE UPPER(" + filtroContieneTexto(nombre) + ")) " 
+					+ " AND (" + (esAdmin == null ? "TRUE" : "FALSE") + " OR esAdmin = " + esAdmin + ") ";
 			ResultSet rs = stmt.executeQuery(sentencia);
 			while (rs.next()) {
-				Integer idBD = rs.getInt("u.id_usuario");
-				String nombreBD = rs.getString("u.nombre");
-				String passwordBD = rs.getString("u.password");
-				Boolean esAdminBD = rs.getBoolean("u.esAdmin");
+				Integer idBD = rs.getInt("id_usuario");
+				String nombreBD = rs.getString("nombre");
+				String passwordBD = rs.getString("password");
+				Boolean esAdminBD = rs.getBoolean("esAdmin");
 				resultado.add(new Usuario(idBD, nombreBD, passwordBD, esAdminBD));
 			}
 

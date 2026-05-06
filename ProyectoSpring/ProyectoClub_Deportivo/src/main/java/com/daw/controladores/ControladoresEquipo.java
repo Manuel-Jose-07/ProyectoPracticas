@@ -35,23 +35,27 @@ public class ControladoresEquipo {
 	@GetMapping("/busquedaEquipos")
 	public ResponseEntity<?> busquedaEquipos(@RequestParam(required = false) String codigo,
 			@RequestParam(required = false) String categoria) {
+		
+		// Comproboar si es un usuario que ha pasado por login (AUTENTICAR)
+		// Comprobar si ese usuario tiene permiso para busquedaEquipos (AUTORIZAR)
+		
 		List<Equipo> resultado = new ArrayList<>();
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
 					"usuario");
 			Statement stmt = conn.createStatement();
-			String sentencia = "SELECT e.id_equipo, e.codigo, e.descripcion, e.categoria, e.grupo "
-					+ " FROM EQUIPO e "
-					+ " WHERE (" + (codigo == null ? "TRUE" : "FALSE") + " OR UPPER(e.codigo) LIKE UPPER(" + filtroContieneTexto(codigo) + ")) "
-					+ "   AND (" + (categoria == null ? "TRUE" : "FALSE") + " OR UPPER(e.categoria) LIKE UPPER(" + filtroContieneTexto(categoria) + ")) ";
+			String sentencia = "SELECT id_equipo, codigo, descripcion, categoria, grupo "
+					+ " FROM EQUIPO "
+					+ " WHERE (" + (codigo == null ? "TRUE" : "FALSE") + " OR UPPER(codigo) LIKE UPPER(" + filtroContieneTexto(codigo) + ")) "
+					+ "   AND (" + (categoria == null ? "TRUE" : "FALSE") + " OR UPPER(categoria) LIKE UPPER(" + filtroContieneTexto(categoria) + ")) ";
 			ResultSet rs = stmt.executeQuery(sentencia);
 			while (rs.next()) {
-				Integer idBD = rs.getInt("e.id_equipo");
-				String codigoBD = rs.getString("e.codigo");
-				String descripcionBD = rs.getString("e.descripcion");
-				String categoriaBD = rs.getString("e.categoria");
-				String grupoBD = rs.getString("e.grupo");
+				Integer idBD = rs.getInt("id_equipo");
+				String codigoBD = rs.getString("codigo");
+				String descripcionBD = rs.getString("descripcion");
+				String categoriaBD = rs.getString("categoria");
+				String grupoBD = rs.getString("grupo");
 				resultado.add(new Equipo(idBD, codigoBD, descripcionBD, categoriaBD, grupoBD));
 			}
 			rs.close();
@@ -71,7 +75,7 @@ public class ControladoresEquipo {
 	}
 
 	@GetMapping("/crearEquipo")
-	public ResponseEntity<?> crearEquipo(String codigo, String descripcion, String categoria, String grupo) {
+	public ResponseEntity<?> crearEquipo(String codigo, @RequestParam(required = false) String descripcion, String categoria, String grupo) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
@@ -100,7 +104,7 @@ public class ControladoresEquipo {
 	}
 
 	@GetMapping("/modificarEquipo")
-	public ResponseEntity<?> modificarEquipo(Integer id_equipo, String codigo, String descripcion,
+	public ResponseEntity<?> modificarEquipo(Integer id_equipo, String codigo, @RequestParam(required = false) String descripcion,
 			String categoria, String grupo) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");

@@ -35,19 +35,19 @@ public class ControladoresFicha_Medica {
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
 					"usuario");
 			Statement stmt = conn.createStatement();
-			String sentencia = "SELECT f.id_ficha_medica, f.JUGADOR_id_jugador, f.codigo, f.descripcion, f.grupo_sanguineo, f.alergias, f.apto "
-					+ " FROM FICHA_MEDICA f "
-					+ " WHERE (" + (codigo == null ? "TRUE" : "FALSE") + " OR UPPER(f.codigo) LIKE UPPER(" + filtroContieneTexto(codigo) + ")) "
-					+ "   AND (" + (JUGADOR_id_jugador == null ? "TRUE" : "FALSE") + " OR f.JUGADOR_id_jugador = " + JUGADOR_id_jugador + ") ";
+			String sentencia = "SELECT id_ficha_medica, JUGADOR_id_jugador, codigo, descripcion, grupo_sanguineo, alergias, apto "
+					+ " FROM FICHA_MEDICA "
+					+ " WHERE (" + (codigo == null ? "TRUE" : "FALSE") + " OR UPPER(codigo) LIKE UPPER(" + filtroContieneTexto(codigo) + ")) "
+					+ " AND (" + (JUGADOR_id_jugador == null ? "TRUE" : "FALSE") + " OR JUGADOR_id_jugador = " + JUGADOR_id_jugador + ") ";
 			ResultSet rs = stmt.executeQuery(sentencia);
 			while (rs.next()) {
-				Integer idBD = rs.getInt("f.id_ficha_medica");
-				Integer jugadorIdBD = rs.getInt("f.JUGADOR_id_jugador");
-				String codigoBD = rs.getString("f.codigo");
-				String descripcionBD = rs.getString("f.descripcion");
-				String grupoSanguineoBD = rs.getString("f.grupo_sanguineo");
-				String alergiasBD = rs.getString("f.alergias");
-				Boolean aptoBD = rs.getBoolean("f.apto");
+				Integer idBD = rs.getInt("id_ficha_medica");
+				Integer jugadorIdBD = rs.getInt("JUGADOR_id_jugador");
+				String codigoBD = rs.getString("codigo");
+				String descripcionBD = rs.getString("descripcion");
+				String grupoSanguineoBD = rs.getString("grupo_sanguineo");
+				String alergiasBD = rs.getString("alergias");
+				Boolean aptoBD = rs.getBoolean("apto");
 				resultado.add(new Ficha_Medica(idBD, jugadorIdBD, codigoBD, descripcionBD, grupoSanguineoBD, alergiasBD, aptoBD));
 			}
 			rs.close();
@@ -67,8 +67,8 @@ public class ControladoresFicha_Medica {
 	}
 
 	@GetMapping("/crearFichaMedica")
-	public ResponseEntity<?> crearFichaMedica(Integer JUGADOR_id_jugador, String codigo, String descripcion,
-			String grupo_sanguineo, String alergias, Boolean apto) {
+	public ResponseEntity<?> crearFichaMedica(Integer JUGADOR_id_jugador, String codigo, @RequestParam(required = false) String descripcion,
+			@RequestParam(required = false) String grupo_sanguineo, @RequestParam(required = false) String alergias, Boolean apto) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
@@ -99,8 +99,8 @@ public class ControladoresFicha_Medica {
 	}
 
 	@GetMapping("/modificarFichaMedica")
-	public ResponseEntity<?> modificarFichaMedica(Integer id_ficha_medica, String descripcion,
-			String grupo_sanguineo, String alergias, Boolean apto) {
+	public ResponseEntity<?> modificarFichaMedica(Integer id_ficha_medica, @RequestParam(required = false) String descripcion,
+			@RequestParam(required = false) String grupo_sanguineo, @RequestParam(required = false) String alergias, Boolean apto) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",

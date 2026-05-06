@@ -35,16 +35,16 @@ public class ControladoresStaff {
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
 					"usuario");
 			Statement stmt = conn.createStatement();
-			String sentencia = "SELECT s.id_staff, s.nombre, s.cargo, s.activo "
-					+ " FROM STAFF s "
-					+ " WHERE (" + (nombre == null ? "TRUE" : "FALSE") + " OR UPPER(s.nombre) LIKE UPPER(" + filtroContieneTexto(nombre) + ")) "
-					+ "   AND (" + (cargo == null ? "TRUE" : "FALSE") + " OR UPPER(s.cargo) LIKE UPPER(" + filtroContieneTexto(cargo) + ")) ";
+			String sentencia = "SELECT id_staff, nombre, cargo, activo "
+					+ " FROM STAFF "
+					+ " WHERE (" + (nombre == null ? "TRUE" : "FALSE") + " OR UPPER(nombre) LIKE UPPER(" + filtroContieneTexto(nombre) + ")) "
+					+ " AND (" + (cargo == null ? "TRUE" : "FALSE") + " OR UPPER(cargo) LIKE UPPER(" + filtroContieneTexto(cargo) + ")) ";
 			ResultSet rs = stmt.executeQuery(sentencia);
 			while (rs.next()) {
-				Integer idBD = rs.getInt("s.id_staff");
-				String nombreBD = rs.getString("s.nombre");
-				String cargoBD = rs.getString("s.cargo");
-				Boolean activoBD = rs.getBoolean("s.activo");
+				Integer idBD = rs.getInt("id_staff");
+				String nombreBD = rs.getString("nombre");
+				String cargoBD = rs.getString("cargo");
+				Boolean activoBD = rs.getBoolean("activo");
 				resultado.add(new Staff(idBD, nombreBD, cargoBD, activoBD));
 			}
 			rs.close();

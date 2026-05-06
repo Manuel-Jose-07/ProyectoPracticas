@@ -38,20 +38,20 @@ public class ControladoresJugador {
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
 					"usuario");
 			Statement stmt = conn.createStatement();
-			String sentencia = "SELECT j.id_jugador, j.EQUIPO_id_equipo, j.nombre, j.fecha_nacimiento, j.posicion, j.activo, j.dorsal, j.score "
-					+ " FROM JUGADOR j "
-					+ " WHERE (" + (nombre == null ? "TRUE" : "FALSE") + " OR UPPER(j.nombre) LIKE UPPER(" + filtroContieneTexto(nombre) + ")) "
-					+ "   AND (" + (EQUIPO_id_equipo == null ? "TRUE" : "FALSE") + " OR j.EQUIPO_id_equipo = " + EQUIPO_id_equipo + ") ";
+			String sentencia = "SELECT id_jugador, EQUIPO_id_equipo, nombre, fecha_nacimiento, posicion, activo, dorsal, score "
+					+ " FROM JUGADOR "
+					+ " WHERE (" + (nombre == null ? "TRUE" : "FALSE") + " OR UPPER(nombre) LIKE UPPER(" + filtroContieneTexto(nombre) + ")) "
+					+ "   AND (" + (EQUIPO_id_equipo == null ? "TRUE" : "FALSE") + " OR EQUIPO_id_equipo = " + EQUIPO_id_equipo + ") ";
 			ResultSet rs = stmt.executeQuery(sentencia);
 			while (rs.next()) {
-				Integer idBD = rs.getInt("j.id_jugador");
-				String nombreBD = rs.getString("j.nombre");
-				Integer equipoIdBD = rs.getInt("j.EQUIPO_id_equipo");
-				LocalDate fechaNacimientoBD = rs.getDate("j.fecha_nacimiento").toLocalDate();
-				String posicionBD = rs.getString("j.posicion");
-				Boolean activoBD = rs.getBoolean("j.activo");
-				Integer dorsalBD = rs.getInt("j.dorsal");
-				Float scoreBD = rs.getFloat("j.score");
+				Integer idBD = rs.getInt("id_jugador");
+				String nombreBD = rs.getString("nombre");
+				Integer equipoIdBD = rs.getInt("EQUIPO_id_equipo");
+				LocalDate fechaNacimientoBD = rs.getDate("fecha_nacimiento").toLocalDate();
+				String posicionBD = rs.getString("posicion");
+				Boolean activoBD = rs.getBoolean("activo");
+				Integer dorsalBD = rs.getInt("dorsal");
+				Float scoreBD = rs.getFloat("score");
 				resultado.add(new Jugador(idBD, equipoIdBD, nombreBD, fechaNacimientoBD, posicionBD, activoBD, dorsalBD, scoreBD));
 			}
 			rs.close();
@@ -71,8 +71,9 @@ public class ControladoresJugador {
 	}
 
 	@GetMapping("/crearJugador")
-	public ResponseEntity<?> crearJugador(Integer EQUIPO_id_equipo, String nombre, LocalDate fecha_nacimiento, String posicion,
-			Boolean activo, Integer dorsal, Float score) {
+	public ResponseEntity<?> crearJugador(Integer EQUIPO_id_equipo, String nombre, LocalDate fecha_nacimiento, @RequestParam(required = false) String posicion,
+			Boolean activo, @RequestParam(required = false) Integer dorsal, @RequestParam(required = false) Float score) {
+		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
@@ -85,8 +86,8 @@ public class ControladoresJugador {
 			pstmt.setDate(3, java.sql.Date.valueOf(fecha_nacimiento));
 			pstmt.setString(4, posicion);
 			pstmt.setBoolean(5, activo);
-			pstmt.setInt(6, dorsal);
-			pstmt.setFloat(7, score);
+			pstmt.setObject(6, dorsal); 
+			pstmt.setObject(7, score);
 			pstmt.executeUpdate();
 			pstmt.close();
 			conn.close();
@@ -102,10 +103,10 @@ public class ControladoresJugador {
 		}
 		return ResponseEntity.ok().body("La creación se ha ejecutado con éxito");
 	}
-
+	
 	@GetMapping("/modificarJugador")
 	public ResponseEntity<?> modificarJugador(Integer id_jugador, Integer EQUIPO_id_equipo, String nombre, LocalDate fecha_nacimiento,
-			String posicion, Boolean activo, Integer dorsal, Float score) {
+			@RequestParam(required = false) String posicion, Boolean activo, @RequestParam(required = false) Integer dorsal, @RequestParam(required = false) Float score) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
@@ -118,8 +119,8 @@ public class ControladoresJugador {
 			pstmt.setDate(3, java.sql.Date.valueOf(fecha_nacimiento));
 			pstmt.setString(4, posicion);
 			pstmt.setBoolean(5, activo);
-			pstmt.setInt(6, dorsal);
-			pstmt.setFloat(7, score);
+			pstmt.setObject(6, dorsal);
+			pstmt.setObject(7, score);
 			pstmt.setInt(8, id_jugador);
 			pstmt.executeUpdate();
 			pstmt.close();

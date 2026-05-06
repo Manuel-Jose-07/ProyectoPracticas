@@ -37,22 +37,22 @@ public class ControladoresPartido {
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
 					"usuario");
 			Statement stmt = conn.createStatement();
-			String sentencia = "SELECT p.id_partido, p.EQUIPO_id_equipo, p.fecha, p.hora, p.rival, p.lugar, p.resultado, p.goles_a_favor, p.goles_en_contra "
-					+ " FROM PARTIDO p "
-					+ " WHERE (" + (rival == null ? "TRUE" : "FALSE") + " OR UPPER(p.rival) LIKE UPPER(" + filtroContieneTexto(rival) + ")) "
-					+ "   AND (" + (EQUIPO_id_equipo == null ? "TRUE" : "FALSE") + " OR p.EQUIPO_id_equipo = " + EQUIPO_id_equipo + ") ";
+			String sentencia = "SELECT id_partido, EQUIPO_id_equipo, fecha, hora, rival, lugar, resultado, goles_a_favor, goles_en_contra "
+					+ " FROM PARTIDO "
+					+ " WHERE (" + (rival == null ? "TRUE" : "FALSE") + " OR UPPER(rival) LIKE UPPER(" + filtroContieneTexto(rival) + ")) "
+					+ " AND (" + (EQUIPO_id_equipo == null ? "TRUE" : "FALSE") + " OR EQUIPO_id_equipo = " + EQUIPO_id_equipo + ") ";
 			ResultSet rs = stmt.executeQuery(sentencia);
 			while (rs.next()) {
-				Integer idBD = rs.getInt("p.id_partido");
-				Integer equipoIdBD = rs.getInt("p.EQUIPO_id_equipo");
-				LocalDate fechaBD = rs.getDate("p.fecha").toLocalDate();
-				LocalTime horaBD = rs.getTime("p.hora").toLocalTime();
-				String rivalBD = rs.getString("p.rival");
-				String lugarBD = rs.getString("p.lugar");
-				String resultadoString = rs.getString("p.resultado");
+				Integer idBD = rs.getInt("id_partido");
+				Integer equipoIdBD = rs.getInt("EQUIPO_id_equipo");
+				LocalDate fechaBD = rs.getDate("fecha").toLocalDate();
+				LocalTime horaBD = rs.getTime("hora").toLocalTime();
+				String rivalBD = rs.getString("rival");
+				String lugarBD = rs.getString("lugar");
+				String resultadoString = rs.getString("resultado");
 				enumResultado resultadoBD = enumResultado.valueOf(resultadoString);
-				Integer golesAFavorBD = rs.getInt("p.goles_a_favor");
-				Integer golesEnContraBD = rs.getInt("p.goles_en_contra");
+				Integer golesAFavorBD = rs.getInt("goles_a_favor");
+				Integer golesEnContraBD = rs.getInt("goles_en_contra");
 				resultado.add(new Partido(idBD, equipoIdBD, fechaBD, horaBD, rivalBD, lugarBD, resultadoBD, golesAFavorBD, golesEnContraBD));
 			}
 			rs.close();
@@ -73,20 +73,22 @@ public class ControladoresPartido {
 
 	@GetMapping("/crearPartido")
 	public ResponseEntity<?> crearPartido(Integer EQUIPO_id_equipo, LocalDate fecha, LocalTime hora,
-			String rival, String lugar, enumResultado resultado) {
+			String rival, String lugar, enumResultado resultado, @RequestParam(required = false) Integer goles_a_favor, @RequestParam(required = false) Integer goles_en_contra) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
 					"usuario");
 
 			PreparedStatement pstmt = conn.prepareStatement(
-					"INSERT INTO PARTIDO (EQUIPO_id_equipo, fecha, hora, rival, lugar, resultado) VALUES (?,?,?,?,?,?)");
+					"INSERT INTO PARTIDO (EQUIPO_id_equipo, fecha, hora, rival, lugar, resultado, goles_a_favor, goles_en_contra) VALUES (?,?,?,?,?,?,?,?)");
 			pstmt.setInt(1, EQUIPO_id_equipo);
 			pstmt.setDate(2, java.sql.Date.valueOf(fecha));
 			pstmt.setTime(3, java.sql.Time.valueOf(hora));
 			pstmt.setString(4, rival);
 			pstmt.setString(5, lugar);
 			pstmt.setString(6, resultado.toString());
+			pstmt.setObject(7, goles_a_favor);
+			pstmt.setObject(8, goles_en_contra);
 			pstmt.executeUpdate();
 			pstmt.close();
 			conn.close();
@@ -104,19 +106,24 @@ public class ControladoresPartido {
 	}
 
 	@GetMapping("/modificarPartido")
-	public ResponseEntity<?> modificarPartido(Integer id_partido, enumResultado resultado,
-			Integer goles_a_favor, Integer goles_en_contra) {
+	public ResponseEntity<?> modificarPartido(Integer id_partido, Integer EQUIPO_id_equipo, LocalDate fecha, LocalTime hora,
+			String rival, String lugar, enumResultado resultado, @RequestParam(required = false) Integer goles_a_favor, @RequestParam(required = false) Integer goles_en_contra) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
 					"usuario");
 
 			PreparedStatement pstmt = conn.prepareStatement(
-					"UPDATE PARTIDO SET resultado=?, goles_a_favor=?, goles_en_contra=? WHERE id_partido=?");
-			pstmt.setString(1, resultado.toString());
-			pstmt.setInt(2, goles_a_favor);
-			pstmt.setInt(3, goles_en_contra);
-			pstmt.setInt(4, id_partido);
+					"UPDATE PARTIDO SET EQUIPO_id_EQUIPO=?, fecha=?, hora=?, rival=?, lugar=?, resultado=?, goles_a_favor=?, goles_en_contra=? WHERE id_partido=?");
+			pstmt.setInt(1, EQUIPO_id_equipo);
+			pstmt.setDate(2, java.sql.Date.valueOf(fecha));
+			pstmt.setTime(3, java.sql.Time.valueOf(hora));
+			pstmt.setString(4, rival);
+			pstmt.setString(5, lugar);
+			pstmt.setString(6, resultado.toString());
+			pstmt.setObject(7, goles_a_favor);
+			pstmt.setObject(8, goles_en_contra);
+			pstmt.setInt(9, id_partido);
 			pstmt.executeUpdate();
 			pstmt.close();
 			conn.close();
