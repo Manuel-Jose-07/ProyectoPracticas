@@ -75,8 +75,8 @@
 				{
 					"id": "6607695f-c3cc-49ec-a54a-161e2977e26b",
 					"name": "categoria",
-					"datatype": "ENUM",
-					"param": "'bebe','prebenjamin','benjamin','alevin','infantil','cadete','juvenil','senior'",
+					"datatype": "VARCHAR",
+					"param": "50",
 					"pk": false,
 					"nn": true,
 					"fk": false,
@@ -95,9 +95,9 @@
 				},
 				{
 					"id": "21d132e6-2836-40f1-88e7-6e0dacd26529",
-					"name": "letra",
-					"datatype": "CHAR",
-					"param": "1",
+					"name": "grupo",
+					"datatype": "VARCHAR",
+					"param": "10",
 					"pk": false,
 					"nn": true,
 					"fk": false,
@@ -228,8 +228,8 @@
 				{
 					"id": "0b13e3ab-2ada-4acc-a876-7602bac1359c",
 					"name": "posicion",
-					"datatype": "ENUM",
-					"param": "_nacimeinto",
+					"datatype": "VARCHAR",
+					"param": "50",
 					"pk": false,
 					"nn": false,
 					"fk": false,
@@ -382,7 +382,7 @@
 			"cols": [
 				{
 					"id": "e6aed6c7-1405-4776-89f8-2a8985787631",
-					"name": "id_ficha",
+					"name": "id_ficha_medica",
 					"datatype": "INT",
 					"param": "",
 					"pk": true,
@@ -577,13 +577,13 @@
 		"d455488b-2942-4e20-8df7-a8cb1e6b4373": {
 			"id": "d455488b-2942-4e20-8df7-a8cb1e6b4373",
 			"visible": true,
-			"name": "CUERPO_TECNICO",
+			"name": "STAFF",
 			"desc": "",
 			"estimatedSize": "",
 			"cols": [
 				{
 					"id": "c655ffea-8d77-4d7a-9ad7-f98650980da6",
-					"name": "id_cuerpo_tecnico",
+					"name": "id_staff",
 					"datatype": "INT",
 					"param": "",
 					"pk": true,
@@ -626,8 +626,8 @@
 				{
 					"id": "ada4459a-601d-43dc-9c79-9aa187d57c26",
 					"name": "cargo",
-					"datatype": "ENUM",
-					"param": "'entrenador','segundo_entrenador','delegado','medico','analista','preparador_fisico','encargado_material'",
+					"datatype": "VARCHAR",
+					"param": "50",
 					"pk": false,
 					"nn": true,
 					"fk": false,
@@ -847,12 +847,12 @@
 					"id": "616ec0c6-67b7-47c8-8431-ef1541256543",
 					"name": "resultado",
 					"datatype": "ENUM",
-					"param": "'ganado','empatado','perdido','suspendido','cancelado','por disputar'",
+					"param": "'ganado','empatado','perdido','suspendido','cancelado','por_disputar'",
 					"pk": false,
 					"nn": true,
 					"fk": false,
 					"comment": "",
-					"defaultvalue": "'por disputar'",
+					"defaultvalue": "'por_disputar'",
 					"data": "",
 					"after": "",
 					"autoinc": false,
@@ -1036,13 +1036,13 @@
 		"0694950b-d73d-468b-a05c-bc1f570c6455": {
 			"id": "0694950b-d73d-468b-a05c-bc1f570c6455",
 			"visible": true,
-			"name": "CUERPO_TECNICO_EQUIPO",
+			"name": "STAFF_EQUIPO",
 			"desc": "",
 			"estimatedSize": "",
 			"cols": [
 				{
 					"id": "efbd8114-b90a-4971-ad38-ae806457a104",
-					"name": "CUERPO_TECNICO_id_cuerpo_tecnico",
+					"name": "STAFF_id_staff",
 					"datatype": "INT",
 					"param": "",
 					"pk": true,
@@ -1173,7 +1173,7 @@
 					"id": "8149912d-f73e-44f1-bfcd-9b6bccefa11e",
 					"name": "password",
 					"datatype": "VARCHAR",
-					"param": "150",
+					"param": "250",
 					"pk": false,
 					"nn": true,
 					"fk": false,
@@ -1480,7 +1480,7 @@
 			"includeWarnings": "yes",
 			"includeCreationSql": "no"
 		},
-		"lastSaved": 1777912853781
+		"lastSaved": 1778062986422
 	},
 	"otherObjects": {},
 	"diagrams": {
@@ -1490,7 +1490,7 @@
 			"id": "c4fd6989-d746-4900-ae72-dadf89ca6440",
 			"keysgraphics": true,
 			"linegraphics": "basic_curved",
-			"zoom": 1.1,
+			"zoom": 0.8,
 			"background": "transparent",
 			"lineColor": "transparent",
 			"isOpen": true,
@@ -1639,7 +1639,7 @@
 					"x": 734,
 					"y": 415,
 					"gHeight": 63,
-					"gWidth": 321,
+					"gWidth": 218,
 					"color": "#ffffff",
 					"background": "#03a9f4",
 					"resized": false,
