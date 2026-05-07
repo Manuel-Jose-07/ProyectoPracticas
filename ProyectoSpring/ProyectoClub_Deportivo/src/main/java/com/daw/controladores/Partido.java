@@ -14,9 +14,10 @@ public class Partido {
 	private enumResultado resultado;
 	private Integer goles_a_favor;
 	private Integer goles_en_contra;
+	private String local;
 
 	public Partido(Integer id_partido, Integer eQUIPO_id_equipo, LocalDate fecha, LocalTime hora, String rival,
-			String lugar, enumResultado resultado, Integer goles_a_favor, Integer goles_en_contra) {
+			String lugar, enumResultado resultado, Integer goles_a_favor, Integer goles_en_contra, String local) {
 		this.id_partido = id_partido;
 		EQUIPO_id_equipo = eQUIPO_id_equipo;
 		this.fecha = fecha;
@@ -26,6 +27,7 @@ public class Partido {
 		this.resultado = resultado;
 		this.goles_a_favor = goles_a_favor;
 		this.goles_en_contra = goles_en_contra;
+		this.local = local;
 	}
 
 	public Integer getId_partido() {
@@ -98,6 +100,14 @@ public class Partido {
 
 	public void setGoles_en_contra(Integer goles_en_contra) {
 		this.goles_en_contra = goles_en_contra;
+	}
+
+	public String getLocal() {
+		return local;
+	}
+
+	public void setLocal(String local) {
+		this.local = local;
 	}
 
 }

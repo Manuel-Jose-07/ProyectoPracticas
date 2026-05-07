@@ -145,10 +145,21 @@ public class ControladoresJugador {
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
 					"usuario");
 
-			PreparedStatement pstmt = conn.prepareStatement("DELETE FROM JUGADOR WHERE id_jugador=?");
-			pstmt.setInt(1, id_jugador);
-			pstmt.executeUpdate();
-			pstmt.close();
+			PreparedStatement pstmt1 = conn.prepareStatement("DELETE FROM JUGADOR_PARTIDO WHERE JUGADOR_id_jugador=?");
+			pstmt1.setInt(1, id_jugador);
+			pstmt1.executeUpdate();
+			pstmt1.close();
+			
+			PreparedStatement pstmt2 = conn.prepareStatement("DELETE FROM FICHA_MEDICA WHERE JUGADOR_id_jugador=?");
+			pstmt2.setInt(1, id_jugador);
+			pstmt2.executeUpdate();
+			pstmt2.close();
+			
+			PreparedStatement pstmt3 = conn.prepareStatement("DELETE FROM JUGADOR WHERE id_jugador=?");
+			pstmt3.setInt(1, id_jugador);
+			pstmt3.executeUpdate();
+			pstmt3.close();
+			
 			conn.close();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

@@ -141,6 +141,21 @@ public class ControladoresEquipo {
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
 					"usuario");
 
+			PreparedStatement pstmt1 = conn.prepareStatement("DELETE FROM STAFF_EQUIPO WHERE EQUIPO_id_equipo=?");
+			pstmt1.setInt(1, id_equipo);
+			pstmt1.executeUpdate();
+			pstmt1.close();
+			
+			PreparedStatement pstmt2 = conn.prepareStatement("DELETE FROM PARTIDO WHERE EQUIPO_id_equipo=?");
+			pstmt2.setInt(1, id_equipo);
+			pstmt2.executeUpdate();
+			pstmt2.close();
+			
+			PreparedStatement pstmt3 = conn.prepareStatement("UPDATE JUGADOR SET EQUIPO_id_equipo = NULL WHERE EQUIPO_id_equipo=?");
+			pstmt3.setInt(1, id_equipo);
+			pstmt3.executeUpdate();
+			pstmt3.close();
+			
 			PreparedStatement pstmt = conn.prepareStatement("DELETE FROM EQUIPO WHERE id_equipo=?");
 			pstmt.setInt(1, id_equipo);
 			pstmt.executeUpdate();

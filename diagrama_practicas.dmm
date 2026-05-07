@@ -185,7 +185,7 @@
 					"datatype": "INT",
 					"param": "",
 					"pk": false,
-					"nn": true,
+					"nn": false,
 					"fk": true,
 					"comment": "",
 					"defaultvalue": "",
@@ -911,6 +911,27 @@
 					"estimatedSize": "",
 					"chosen": false,
 					"selected": false
+				},
+				{
+					"id": "8bf85dd4-ed0b-4ca2-b3b2-2fddcebd99d6",
+					"name": "local",
+					"datatype": "VARCHAR",
+					"param": "100",
+					"pk": false,
+					"nn": true,
+					"fk": false,
+					"comment": "",
+					"defaultvalue": "",
+					"data": "",
+					"after": "",
+					"autoinc": false,
+					"collation": "",
+					"charset": "",
+					"binary": false,
+					"zerofill": false,
+					"unsigned": false,
+					"enum": "",
+					"estimatedSize": ""
 				}
 			],
 			"relations": [
@@ -1371,7 +1392,7 @@
 		},
 		"e929ce2a-1395-4ad6-ae47-29c76d246d9f": {
 			"id": "e929ce2a-1395-4ad6-ae47-29c76d246d9f",
-			"name": "FK_CUERPO_TECNICO_CUERPO_TECNICO_EQUIPO",
+			"name": "FK_STAFF_STAFF_EQUIPO",
 			"desc": "",
 			"type": "identifying",
 			"parent_key": "d8482ee7-1185-49c9-a9d7-1752d4575ba7",
@@ -1396,7 +1417,7 @@
 		},
 		"e0d5c824-0933-4ef6-8610-689be651c2da": {
 			"id": "e0d5c824-0933-4ef6-8610-689be651c2da",
-			"name": "FK_EQUIPO_CUERPO_TECNICO_EQUIPO",
+			"name": "FK_EQUIPO_STAFF_EQUIPO",
 			"desc": "",
 			"type": "identifying",
 			"parent_key": "03b9d2a0-de52-4a21-b60f-07fb00f38321",
@@ -1480,7 +1501,7 @@
 			"includeWarnings": "yes",
 			"includeCreationSql": "no"
 		},
-		"lastSaved": 1778063111510
+		"lastSaved": 1778176073449
 	},
 	"otherObjects": {},
 	"diagrams": {
@@ -1490,7 +1511,7 @@
 			"id": "c4fd6989-d746-4900-ae72-dadf89ca6440",
 			"keysgraphics": true,
 			"linegraphics": "basic_curved",
-			"zoom": 0.8,
+			"zoom": 1.1,
 			"background": "transparent",
 			"lineColor": "transparent",
 			"isOpen": true,
@@ -1498,8 +1519,8 @@
 			"diagramItems": {
 				"28bd2c69-78a5-445c-97ea-bc87d55857cd": {
 					"referencedItemId": "28bd2c69-78a5-445c-97ea-bc87d55857cd",
-					"x": 775,
-					"y": 598,
+					"x": 776,
+					"y": 599,
 					"gHeight": 117,
 					"gWidth": 234,
 					"color": "#ffffff",
@@ -1545,7 +1566,7 @@
 				"497df008-f47c-4f42-98a1-de7184386fc4": {
 					"referencedItemId": "497df008-f47c-4f42-98a1-de7184386fc4",
 					"x": 743,
-					"y": 54,
+					"y": 56,
 					"gHeight": 153,
 					"gWidth": 254,
 					"color": "#ffffff",
@@ -1567,7 +1588,7 @@
 				},
 				"d455488b-2942-4e20-8df7-a8cb1e6b4373": {
 					"referencedItemId": "d455488b-2942-4e20-8df7-a8cb1e6b4373",
-					"x": 786,
+					"x": 787,
 					"y": 247,
 					"gHeight": 99,
 					"gWidth": 215,
@@ -1592,7 +1613,7 @@
 					"referencedItemId": "5e354b03-6715-4a3b-9881-f1e39f6ecda6",
 					"x": 381,
 					"y": 453,
-					"gHeight": 189,
+					"gHeight": 207,
 					"gWidth": 218,
 					"color": "#ffffff",
 					"background": "#03a9f4",
