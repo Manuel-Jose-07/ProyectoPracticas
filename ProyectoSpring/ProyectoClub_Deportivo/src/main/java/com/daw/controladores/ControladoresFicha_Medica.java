@@ -27,8 +27,8 @@ public class ControladoresFicha_Medica {
 	}
 
 	@GetMapping("/busquedaFichasMedicas")
-	public ResponseEntity<?> busquedaFichasMedicas(@RequestParam(required = false) String codigo,
-			@RequestParam(required = false) Integer JUGADOR_id_jugador) {
+	public ResponseEntity<?> busquedaFichasMedicas( @RequestParam(required = false) Integer JUGADOR_id_jugador,
+			 @RequestParam(required = false) Boolean apto) {
 		List<Ficha_Medica> resultado = new ArrayList<>();
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -37,8 +37,8 @@ public class ControladoresFicha_Medica {
 			Statement stmt = conn.createStatement();
 			String sentencia = "SELECT id_ficha_medica, JUGADOR_id_jugador, codigo, descripcion, grupo_sanguineo, alergias, apto "
 					+ " FROM FICHA_MEDICA "
-					+ " WHERE (" + (codigo == null ? "TRUE" : "FALSE") + " OR UPPER(codigo) LIKE UPPER(" + filtroContieneTexto(codigo) + ")) "
-					+ " AND (" + (JUGADOR_id_jugador == null ? "TRUE" : "FALSE") + " OR JUGADOR_id_jugador = " + JUGADOR_id_jugador + ") ";
+					+ " WHERE (" + (JUGADOR_id_jugador == null ? "TRUE" : "FALSE") + " OR JUGADOR_id_jugador = " + JUGADOR_id_jugador + ") "
+					+ "   AND (" + (apto == null ? "TRUE" : "FALSE") + " OR apto = " + apto + ") ";
 			ResultSet rs = stmt.executeQuery(sentencia);
 			while (rs.next()) {
 				Integer idBD = rs.getInt("id_ficha_medica");

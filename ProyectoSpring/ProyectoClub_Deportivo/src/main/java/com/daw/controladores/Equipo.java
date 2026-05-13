@@ -6,14 +6,14 @@ public class Equipo {
 	private String codigo;
 	private String descripcion;
 	private String categoria;
-	private String letra;
+	private String grupo;
 
-	public Equipo(Integer id_equipo, String codigo, String descripcion, String categoria, String letra) {
+	public Equipo(Integer id_equipo, String codigo, String descripcion, String categoria, String grupo) {
 		this.id_equipo = id_equipo;
 		this.codigo = codigo;
 		this.descripcion = descripcion;
 		this.categoria = categoria;
-		this.letra = letra;
+		this.grupo = grupo;
 	}
 
 	public Integer getId_equipo() {
@@ -48,12 +48,12 @@ public class Equipo {
 		this.categoria = categoria;
 	}
 
-	public String getLetra() {
-		return letra;
+	public String getGrupo() {
+		return grupo;
 	}
 
-	public void setLetra(String letra) {
-		this.letra = letra;
+	public void setGrupo(String grupo) {
+		this.grupo = grupo;
 	}
 
 }

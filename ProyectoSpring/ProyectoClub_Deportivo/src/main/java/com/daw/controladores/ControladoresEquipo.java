@@ -33,8 +33,8 @@ public class ControladoresEquipo {
 	}
 
 	@GetMapping("/busquedaEquipos")
-	public ResponseEntity<?> busquedaEquipos(@RequestParam(required = false) String codigo,
-			@RequestParam(required = false) String categoria) {
+	public ResponseEntity<?> busquedaEquipos(@RequestParam(required = false) String categoria,
+			@RequestParam(required = false) String grupo) {
 		
 		// Comproboar si es un usuario que ha pasado por login (AUTENTICAR)
 		// Comprobar si ese usuario tiene permiso para busquedaEquipos (AUTORIZAR)
@@ -47,8 +47,8 @@ public class ControladoresEquipo {
 			Statement stmt = conn.createStatement();
 			String sentencia = "SELECT id_equipo, codigo, descripcion, categoria, grupo "
 					+ " FROM EQUIPO "
-					+ " WHERE (" + (codigo == null ? "TRUE" : "FALSE") + " OR UPPER(codigo) LIKE UPPER(" + filtroContieneTexto(codigo) + ")) "
-					+ "   AND (" + (categoria == null ? "TRUE" : "FALSE") + " OR UPPER(categoria) LIKE UPPER(" + filtroContieneTexto(categoria) + ")) ";
+					+ " WHERE (" + (categoria == null ? "TRUE" : "FALSE") + " OR UPPER(categoria) LIKE UPPER(" + filtroContieneTexto(categoria) + ")) "
+					+ "   AND (" + (grupo == null ? "TRUE" : "FALSE") + " OR UPPER(grupo) LIKE UPPER(" + filtroContieneTexto(grupo) + ")) ";
 			ResultSet rs = stmt.executeQuery(sentencia);
 			while (rs.next()) {
 				Integer idBD = rs.getInt("id_equipo");
@@ -141,20 +141,26 @@ public class ControladoresEquipo {
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
 					"usuario");
 
-			PreparedStatement pstmt1 = conn.prepareStatement("DELETE FROM STAFF_EQUIPO WHERE EQUIPO_id_equipo=?");
+			PreparedStatement pstmt1 = conn.prepareStatement("DELETE FROM JUGADOR_PARTIDO PARTIDO_id_partido IN " +
+					           "(SELECT id_partido FROM PARTIDO WHERE EQUIPO_id_equipo=?)");
 			pstmt1.setInt(1, id_equipo);
 			pstmt1.executeUpdate();
 			pstmt1.close();
 			
-			PreparedStatement pstmt2 = conn.prepareStatement("DELETE FROM PARTIDO WHERE EQUIPO_id_equipo=?");
+			PreparedStatement pstmt2 = conn.prepareStatement("DELETE FROM STAFF_EQUIPO WHERE EQUIPO_id_equipo=?");
 			pstmt2.setInt(1, id_equipo);
 			pstmt2.executeUpdate();
 			pstmt2.close();
 			
-			PreparedStatement pstmt3 = conn.prepareStatement("UPDATE JUGADOR SET EQUIPO_id_equipo = NULL WHERE EQUIPO_id_equipo=?");
+			PreparedStatement pstmt3 = conn.prepareStatement("DELETE FROM PARTIDO WHERE EQUIPO_id_equipo=?");
 			pstmt3.setInt(1, id_equipo);
 			pstmt3.executeUpdate();
 			pstmt3.close();
+			
+			PreparedStatement pstmt4 = conn.prepareStatement("UPDATE JUGADOR SET EQUIPO_id_equipo = NULL WHERE EQUIPO_id_equipo=?");
+			pstmt4.setInt(1, id_equipo);
+			pstmt4.executeUpdate();
+			pstmt4.close();
 			
 			PreparedStatement pstmt = conn.prepareStatement("DELETE FROM EQUIPO WHERE id_equipo=?");
 			pstmt.setInt(1, id_equipo);
