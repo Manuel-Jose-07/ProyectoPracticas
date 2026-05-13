@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jugadores - La Liara Balompie</title>
+    <link rel="stylesheet" href="../CSS/estiloJugador.css">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Jugadores</h2>
+        <div class="form-card">
+            <div class="form-row">
+                <div class="field">
+                    <label for="inp-nombre">Nombre</label>
+                    <input type="text" id="inp-nombre" placeholder="Nombre del jugador">
+                </div>
+                <div class="field">
+                    <label for="inp-apto">Equipo</label>
+                    <input type="text" id="inp-equipo" placeholder="Equipo">
+                </div>
+                <button class="btn-buscar" id="btn-buscar" onclick="buscar()">Buscar</button>
+            </div>
+        </div>
+        <button class="btn-action btn-eliminar" onclick="crearJugador()">Crear</button>
+        <div class="status-bar" id="status"></div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Equipo</th>
+                        <th>Fecha Nacimiento</th>
+                        <th>Posicion</th>
+                        <th>Activo</th>
+                        <th>Dorsal</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-body">
+                    <tr class="empty-row">
+                        <td colspan="7">Realiza una búsqueda para ver resultados</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <!-- Modal editar jugador -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-jugador">
+            <div class="modal-header">
+                <h3 id="modal-jugador">Modificar Jugador</h3>
+                <button class="modal-close" onclick="cerrarModal()" aria-label="Cerrar">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="field">
+                    <label for="modal-inp-nombre">Nombre</label>
+                    <input type="text" id="modal-crear-nombre" placeholder="Escribe el nombre del jugador">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-equipo">Equipo</label>
+                    <input type="text" id="modal-crear-equipo" placeholder="Escribe el equipo">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-fecha_nacimiento">Fecha de Nacimiento</label>
+                    <input type="text" id="modal-crear-fecha_nacimiento" placeholder="Escribe la fecha de nacimiento">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-posicion">Posicion</label>
+                    <input type="text" id="modal-crear-posicion" placeholder="Escribe la posicion">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-activo">Activo</label>
+                    <input type="text" id="modal-crear-activo" placeholder="Escribe si esta activo">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-dorsal">Dorsal</label>
+                    <input type="text" id="modal-crear-dorsal" placeholder="Escribe el dorsal">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-score">Score</label>
+                    <input type="text" id="modal-crear-score" placeholder="Escribe el score">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+            <button class="btn-aceptar" onclick="guardarEdicion()">Aceptar</button>
+        </div>
+    </div>
+    </div>
+
+
+    <!-- Modal crear jugador -->
+    <div class="modal-overlay" id="modal-overlay-crear">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-ficha">
+            <div class="modal-header">
+                <button class="modal-close" onclick="cerrarModalCrear()" aria-label="Cerrar">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="field">
+                    <label for="modal-inp-nombre">Nombre</label>
+                    <input type="text" id="modal-crear-nombre" placeholder="Escribe el nombre del jugador">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-equipo">Equipo</label>
+                    <input type="text" id="modal-crear-equipo" placeholder="Escribe el equipo">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-fecha_nacimiento">Fecha de Nacimiento</label>
+                    <input type="text" id="modal-crear-fecha_nacimiento" placeholder="Escribe la fecha de nacimiento">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-posicion">Posicion</label>
+                    <input type="text" id="modal-crear-posicion" placeholder="Escribe la posicion">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-activo">Activo</label>
+                    <input type="text" id="modal-crear-activo" placeholder="Escribe si esta activo">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-dorsal">Dorsal</label>
+                    <input type="text" id="modal-crear-dorsal" placeholder="Escribe el dorsal">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-score">Score</label>
+                    <input type="text" id="modal-crear-score" placeholder="Escribe el score">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn-aceptar" onclick="guardarEdicion()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+    <script src="../JS/scriptJugador.js"></script>
+</body>
+
+</html>

@@ -141,8 +141,8 @@ public class ControladoresEquipo {
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario",
 					"usuario");
 
-			PreparedStatement pstmt1 = conn.prepareStatement("DELETE FROM JUGADOR_PARTIDO PARTIDO_id_partido IN " +
-					           "(SELECT id_partido FROM PARTIDO WHERE EQUIPO_id_equipo=?)");
+			PreparedStatement pstmt1 = conn.prepareStatement("DELETE FROM JUGADOR_PARTIDO PARTIDO_id_partido IN " 
+														+ "(SELECT id_partido FROM PARTIDO WHERE EQUIPO_id_equipo=?)");
 			pstmt1.setInt(1, id_equipo);
 			pstmt1.executeUpdate();
 			pstmt1.close();

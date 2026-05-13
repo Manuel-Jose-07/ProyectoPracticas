@@ -29,6 +29,10 @@ public class ControladoresFicha_Medica {
 	@GetMapping("/busquedaFichasMedicas")
 	public ResponseEntity<?> busquedaFichasMedicas( @RequestParam(required = false) Integer JUGADOR_id_jugador,
 			 @RequestParam(required = false) Boolean apto) {
+		
+		// Comproboar si es un usuario que ha pasado por login (AUTENTICAR)
+		// Comprobar si ese usuario tiene permiso para busquedaFichasMedicas (AUTORIZAR)
+		
 		List<Ficha_Medica> resultado = new ArrayList<>();
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");

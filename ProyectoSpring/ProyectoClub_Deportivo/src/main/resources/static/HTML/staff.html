@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staffs - La Liara Balompie</title>
+    <link rel="stylesheet" href="../CSS/estiloStaff.css">
+</head>
+
+
+<body>
+    <div class="container">
+        <h2>Partidos</h2>
+        <div class="form-card">
+            <div class="form-row">
+                <div class="field">
+                    <label for="inp-nombre">Nombre</label>
+                    <input type="text" id="inp-nombre" placeholder="Nombre">
+                </div>
+                <div class="field">
+                    <label for="inp-cargo">Cargo</label>
+                    <input type="text" id="inp-cargo" placeholder="Cargo">
+                </div>
+                <button class="btn-buscar" id="btn-buscar" onclick="buscar()">Buscar</button>
+            </div>
+        </div>
+        <button class="btn-action btn-eliminar" onclick="crearStaff()">Crear</button>
+        <div class="status-bar" id="status"></div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Cargo</th>
+                        <th>Activo</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-body">
+                    <tr class="empty-row">
+                        <td colspan="3">Realiza una búsqueda para ver resultados</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <!-- Modal editar staff -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-staff">
+            <div class="modal-header">
+                <h3 id="modal-staff">Modificar Staff</h3>
+                <button class="modal-close" onclick="cerrarModal()" aria-label="Cerrar">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="field">
+                    <label for="modal-inp-nombre">Nombre</label>
+                    <input type="text" id="modal-crear-nombre" placeholder="Escribe el nombre">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-cargo">Cargo</label>
+                    <input type="text" id="modal-crear-cargo" placeholder="Escribe el cargo">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-activo">Activo</label>
+                    <input type="text" id="modal-crear-activo" placeholder="Escribe si esta activo">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+            <button class="btn-aceptar" onclick="guardarEdicion()">Aceptar</button>
+        </div>
+    </div>
+    </div>
+
+
+    <!-- Modal crear partido -->
+    <div class="modal-overlay" id="modal-overlay-crear">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-ficha">
+            <div class="modal-header">
+                <button class="modal-close" onclick="cerrarModalCrear()" aria-label="Cerrar">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="field">
+                    <label for="modal-inp-nombre">Nombre</label>
+                    <input type="text" id="modal-crear-nombre" placeholder="Escribe el nombre">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-cargo">Cargo</label>
+                    <input type="text" id="modal-crear-cargo" placeholder="Escribe el cargo">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-activo">Activo</label>
+                    <input type="text" id="modal-crear-activo" placeholder="Escribe si esta activo">
+                </div>
+            </div>
+    </div>
+    <script src="../JS/scriptStaff.js"></script>
+</body>
+
+</html>

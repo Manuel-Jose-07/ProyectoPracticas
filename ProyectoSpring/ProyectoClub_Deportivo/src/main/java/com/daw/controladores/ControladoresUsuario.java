@@ -33,6 +33,10 @@ public class ControladoresUsuario {
 	@GetMapping("/busquedaUsuarios")
 	public ResponseEntity<?> buscarUsuarios(@RequestParam(required = false) String nombre,
 			@RequestParam(required = false) Boolean esAdmin) {
+		
+		// Comproboar si es un usuario que ha pasado por login (AUTENTICAR)
+		// Comprobar si ese usuario tiene permiso para busquedaUsuarios (AUTORIZAR)
+		
 		List<Usuario> resultado = new ArrayList<>();
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");

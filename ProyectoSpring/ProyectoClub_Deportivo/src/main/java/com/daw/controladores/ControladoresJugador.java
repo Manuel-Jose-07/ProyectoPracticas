@@ -32,6 +32,10 @@ public class ControladoresJugador {
 	@GetMapping("/busquedaJugadores")
 	public ResponseEntity<?> busquedaJugadores(@RequestParam(required = false) String nombre,
 			@RequestParam(required = false) Integer EQUIPO_id_equipo) {
+		
+		// Comproboar si es un usuario que ha pasado por login (AUTENTICAR)
+		// Comprobar si ese usuario tiene permiso para busquedaJugadores (AUTORIZAR)
+		
 		List<Jugador> resultado = new ArrayList<>();
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");

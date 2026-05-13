@@ -29,6 +29,10 @@ public class ControladoresStaff {
 	@GetMapping("/busquedaStaff")
 	public ResponseEntity<?> busquedaStaff(@RequestParam(required = false) String nombre,
 			@RequestParam(required = false) String cargo) {
+		
+		// Comproboar si es un usuario que ha pasado por login (AUTENTICAR)
+		// Comprobar si ese usuario tiene permiso para busquedaStaff (AUTORIZAR)
+		
 		List<Staff> resultado = new ArrayList<>();
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");

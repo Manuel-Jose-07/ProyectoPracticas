@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partidos - La Liara Balompie</title>
+    <link rel="stylesheet" href="../CSS/estiloPartido.css">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Partidos</h2>
+        <div class="form-card">
+            <div class="form-row">
+                <div class="field">
+                    <label for="inp-rival">Rival</label>
+                    <input type="text" id="inp-rival" placeholder="Rival">
+                </div>
+                <div class="field">
+                    <label for="inp-equipo">Equipo</label>
+                    <input type="text" id="inp-equipo" placeholder="Equipo">
+                </div>
+                <button class="btn-buscar" id="btn-buscar" onclick="buscar()">Buscar</button>
+            </div>
+        </div>
+        <button class="btn-action btn-eliminar" onclick="crearPartido()">Crear</button>
+        <div class="status-bar" id="status"></div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Equipo</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Rival</th>
+                        <th>Lugar</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-body">
+                    <tr class="empty-row">
+                        <td colspan="5">Realiza una búsqueda para ver resultados</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <!-- Modal editar partido -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-partido">
+            <div class="modal-header">
+                <h3 id="modal-partido">Modificar Partido</h3>
+                <button class="modal-close" onclick="cerrarModal()" aria-label="Cerrar">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="field">
+                    <label for="modal-inp-equipo">Equipo</label>
+                    <input type="text" id="modal-crear-equipo" placeholder="Escribe el equipo">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-fecha">Fecha</label>
+                    <input type="text" id="modal-crear-fecha" placeholder="Escribe la fecha">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-hora">Hora</label>
+                    <input type="text" id="modal-crear-hora" placeholder="Escribe la hora">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-activo">Rival</label>
+                    <input type="text" id="modal-crear-rival" placeholder="Escribe el rival">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-lugar">Lugar</label>
+                    <input type="text" id="modal-crear-lugar" placeholder="Escribe el lugar">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+            <button class="btn-aceptar" onclick="guardarEdicion()">Aceptar</button>
+        </div>
+    </div>
+    </div>
+
+
+    <!-- Modal crear partido -->
+    <div class="modal-overlay" id="modal-overlay-crear">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-ficha">
+            <div class="modal-header">
+                <button class="modal-close" onclick="cerrarModalCrear()" aria-label="Cerrar">&#10005;</button>
+            </div>
+            <div class="modal-body">
+                <div class="field">
+                    <label for="modal-inp-equipo">Equipo</label>
+                    <input type="text" id="modal-crear-equipo" placeholder="Escribe el equipo">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-fecha">Fecha</label>
+                    <input type="text" id="modal-crear-fecha" placeholder="Escribe la fecha">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-hora">Hora</label>
+                    <input type="text" id="modal-crear-hora" placeholder="Escribe la hora">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-activo">Rival</label>
+                    <input type="text" id="modal-crear-rival" placeholder="Escribe el rival">
+                </div>
+                <div class="field">
+                    <label for="modal-inp-lugar">Lugar</label>
+                    <input type="text" id="modal-crear-lugar" placeholder="Escribe el lugar">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn-aceptar" onclick="guardarEdicion()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+    <script src="../JS/scriptPartido.js"></script>
+</body>
+
+</html>
