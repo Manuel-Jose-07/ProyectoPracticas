@@ -2,15 +2,98 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usuarios - La Liara Balompie</title>
-    <link rel="stylesheet" href="../CSS/estilos.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acesso - La Liara Balompie</title>
+
+    <link rel="stylesheet" href="../CSS/estiloLogin.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap"
+        rel="stylesheet" />
+
 </head>
 
 <body>
 
-    <script src="../JS/script.js"></script>
+    <div class="bg-layer">
+        <div class="bg-grid"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="diagonal-line"></div>
+        <div class="diagonal-line"></div>
+        <div class="particles" id="particles"></div>
+    </div>
+
+    <div class="main-container">
+
+        <div class="brand-side">
+            <div class="brand-badge">Sistema de Gestión</div>
+
+            <div class="brand-logo">
+                <img class="club-logo" src="../img/logoLiara.png" alt="logo-liara" />
+            </div>
+
+            <h1 class="brand-title">
+                <span class="club-name">LA LIARA</span><br />
+                <span class="accent">BALOMPIÉ</span>
+            </h1>
+
+            <p class="brand-subtitle">
+                Plataforma integral de gestión deportiva. Jugadores, equipos, partidos y mucho más desde un solo lugar.
+            </p>
+
+            <div class="brand-stats">
+                <div class="stat">
+                    <div class="stat-num" id="statJugadores">—</div>
+                    <div class="stat-label">Jugadores</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num" id="statEquipos">—</div>
+                    <div class="stat-label">Equipos</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-num" id="statPartidos">—</div>
+                    <div class="stat-label">Partidos</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="access-side">
+            <div class="access-card" id="accessCard">
+                <div class="access-title">ACCESO</div>
+                <div class="access-sub">Por favor introduce tu usuario y contraseña</div>
+
+                <div class="field-group" id="fieldGroup">
+                    <div class="field-wrap" id="usuField">
+                        <label class="field-label">Usuario</label>
+                        <input class="field-input" type="text" placeholder="Introduce tu usuario" />
+                    </div>
+                </div>
+
+                <div class="field-group" id="fieldGroup">
+                    <div class="field-wrap" id="passField">
+                        <label class="field-label">Contraseña</label>
+                        <input class="field-input" type="password" id="passInput" placeholder="••••••••" />
+                    </div>
+                </div>
+
+                <button class="btn-access">
+                    Entrar al sistema →
+                </button>
+
+                <div class="error-msg" id="errorMsg">Contraseña incorrecta</div>
+
+                <div class="access-footer">
+                    Sistema de gestión v1.0 · Club Deportivo
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="../JS/scriptLogin.js"></script>
 </body>
 
 </html>

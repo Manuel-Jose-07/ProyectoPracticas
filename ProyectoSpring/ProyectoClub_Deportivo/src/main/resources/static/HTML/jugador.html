@@ -2,142 +2,211 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jugadores - La Liara Balompie</title>
-    <link rel="stylesheet" href="../CSS/estiloJugador.css">
+    <link rel="stylesheet" href="../CSS/estiloJugador.css" />
 </head>
 
 <body>
-    <div class="container">
-        <h2>Jugadores</h2>
-        <div class="form-card">
-            <div class="form-row">
-                <div class="field">
-                    <label for="inp-nombre">Nombre</label>
-                    <input type="text" id="inp-nombre" placeholder="Nombre del jugador">
-                </div>
-                <div class="field">
-                    <label for="inp-apto">Equipo</label>
-                    <input type="text" id="inp-equipo" placeholder="Equipo">
-                </div>
-                <button class="btn-buscar" id="btn-buscar" onclick="buscar()">Buscar</button>
-            </div>
+    <nav>
+        <div class="nav-logo-wrap" title="Inicio">
+            <img class="club-logo" src="../img/logoLiara.png" alt="logo-liara" />
         </div>
-        <button class="btn-action btn-eliminar" onclick="crearJugador()">Crear</button>
-        <div class="status-bar" id="status"></div>
+        <span class="nav-sep"></span>
+        <div class="nav-links">
+            <a href="jugador.html" class="active">Jugadores</a>
+            <a href="equipo.html">Equipos</a>
+            <a href="staff.html">Staffs</a>
+            <a href="partido.html">Partidos</a>
+        </div>
+        <div class="nav-right"></div>
+    </nav>
+
+    <main>
+        <div class="page-header">
+            <div>
+                <h1>
+                    <svg style="width:32px;height:32px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:8px"
+                        viewBox="0 0 24 24">
+                        <circle cx="12" cy="8" r="4" />
+                        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                    </svg>
+                    JUGADORES
+                </h1>
+                <p>Plantilla del club · <span id="totalJugadores">0</span> jugadores</p>
+            </div>
+            <button class="btn btn-primary">
+                <svg viewBox="0 0 24 24">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Nuevo jugador
+            </button>
+        </div>
+
+        <div class="search-bar">
+            <div class="field">
+                <label>Nombre</label>
+                <input type="text" id="busNombre" placeholder="Buscar por nombre..." />
+            </div>
+            <div class="field">
+                <label>Categoría del equipo</label>
+                <input type="text" id="busCategoria" placeholder="Senior, Juvenil..." />
+            </div>
+            <button class="btn btn-primary">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                Buscar
+            </button>
+            <button class="btn btn-outline">
+                <svg viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+                Limpiar
+            </button>
+        </div>
+
         <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
                         <th>Nombre</th>
-                        <th>Equipo</th>
-                        <th>Fecha Nacimiento</th>
+                        <th>Fecha nac.</th>
                         <th>Posicion</th>
-                        <th>Activo</th>
+                        <th>Estado</th>
                         <th>Dorsal</th>
                         <th>Score</th>
+                        <th>Equipo</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="tabla-body">
-                    <tr class="empty-row">
-                        <td colspan="7">Realiza una búsqueda para ver resultados</td>
+                <tbody id="tablaJugadores">
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty-state">
+                                <div class="icon">⚽</div>
+                                <p>Pulsa Buscar para cargar los jugadores</p>
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-    </div>
+    </main>
 
+    <!-- MODAL CREAR -->
+    <div class="modal-overlay" id="modalCrear">
+        <div class="modal">
+            <button class="modal-close">✕</button>
+            <h2>
+                <svg style="width:20px;height:20px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:6px"
+                    viewBox="0 0 24 24">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                NUEVO JUGADOR
+            </h2>
+            <div class="form-grid">
+                <div class="form-field full"><label>Nombre completo <span class="req">*</span></label><input type="text"
+                        id="cNombre" placeholder="Nombre del jugador" /></div>
+                <div class="form-field"><label>Fecha de nacimiento <span class="req">*</span></label><input type="date"
+                        id="cFecha" /></div>
+                <div class="form-field"><label>Posicion</label><input type="text" id="cPosicion" /></div>
+                <div class="form-field"><label>Estado</label>
+                    <select id="cEstado">
+                        <option value="true">Activo</option>
+                        <option value="false">Inactivo</option>
+                    </select>
+                </div>
+                <div class="form-field"><label>Dorsal</label><input type="text" id="cDorsal" /></div>
+                <div class="form-field"><label>Score</label><input type="text" id="cScore" /></div>
+                <div class="form-field"><label>Equipo <span class="req">*</span></label><select id="cEquipo"></select>
+                </div>
 
-    <!-- Modal editar jugador -->
-    <div class="modal-overlay" id="modal-overlay">
-        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-jugador">
-            <div class="modal-header">
-                <h3 id="modal-jugador">Modificar Jugador</h3>
-                <button class="modal-close" onclick="cerrarModal()" aria-label="Cerrar">&#10005;</button>
-            </div>
-            <div class="modal-body">
-                <div class="field">
-                    <label for="modal-inp-nombre">Nombre</label>
-                    <input type="text" id="modal-crear-nombre" placeholder="Escribe el nombre del jugador">
-                </div>
-                <div class="field">
-                    <label for="modal-inp-equipo">Equipo</label>
-                    <input type="text" id="modal-crear-equipo" placeholder="Escribe el equipo">
-                </div>
-                <div class="field">
-                    <label for="modal-inp-fecha_nacimiento">Fecha de Nacimiento</label>
-                    <input type="text" id="modal-crear-fecha_nacimiento" placeholder="Escribe la fecha de nacimiento">
-                </div>
-                <div class="field">
-                    <label for="modal-inp-posicion">Posicion</label>
-                    <input type="text" id="modal-crear-posicion" placeholder="Escribe la posicion">
-                </div>
-                <div class="field">
-                    <label for="modal-inp-activo">Activo</label>
-                    <input type="text" id="modal-crear-activo" placeholder="Escribe si esta activo">
-                </div>
-                <div class="field">
-                    <label for="modal-inp-dorsal">Dorsal</label>
-                    <input type="text" id="modal-crear-dorsal" placeholder="Escribe el dorsal">
-                </div>
-                <div class="field">
-                    <label for="modal-inp-score">Score</label>
-                    <input type="text" id="modal-crear-score" placeholder="Escribe el score">
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
-            <button class="btn-aceptar" onclick="guardarEdicion()">Aceptar</button>
-        </div>
-    </div>
-    </div>
-
-
-    <!-- Modal crear jugador -->
-    <div class="modal-overlay" id="modal-overlay-crear">
-        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-ficha">
-            <div class="modal-header">
-                <button class="modal-close" onclick="cerrarModalCrear()" aria-label="Cerrar">&#10005;</button>
-            </div>
-            <div class="modal-body">
-                <div class="field">
-                    <label for="modal-inp-nombre">Nombre</label>
-                    <input type="text" id="modal-crear-nombre" placeholder="Escribe el nombre del jugador">
-                </div>
-                <div class="field">
-                    <label for="modal-inp-equipo">Equipo</label>
-                    <input type="text" id="modal-crear-equipo" placeholder="Escribe el equipo">
-                </div>
-                <div class="field">
-                    <label for="modal-inp-fecha_nacimiento">Fecha de Nacimiento</label>
-                    <input type="text" id="modal-crear-fecha_nacimiento" placeholder="Escribe la fecha de nacimiento">
-                </div>
-                <div class="field">
-                    <label for="modal-inp-posicion">Posicion</label>
-                    <input type="text" id="modal-crear-posicion" placeholder="Escribe la posicion">
-                </div>
-                <div class="field">
-                    <label for="modal-inp-activo">Activo</label>
-                    <input type="text" id="modal-crear-activo" placeholder="Escribe si esta activo">
-                </div>
-                <div class="field">
-                    <label for="modal-inp-dorsal">Dorsal</label>
-                    <input type="text" id="modal-crear-dorsal" placeholder="Escribe el dorsal">
-                </div>
-                <div class="field">
-                    <label for="modal-inp-score">Score</label>
-                    <input type="text" id="modal-crear-score" placeholder="Escribe el score">
-                </div>
             </div>
             <div class="modal-footer">
-                <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
-                <button class="btn-aceptar" onclick="guardarEdicion()">Aceptar</button>
+                <button class="btn btn-outline">Cancelar</button>
+                <button class="btn btn-primary">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    Crear jugador
+                </button>
             </div>
         </div>
     </div>
-    <script src="../JS/scriptJugador.js"></script>
+
+    <!-- MODAL MODIFICAR -->
+    <div class="modal-overlay" id="modalModificar">
+        <div class="modal">
+            <button class="modal-close">✕</button>
+            <h2>
+                <svg style="width:20px;height:20px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:6px"
+                    viewBox="0 0 24 24">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+                MODIFICAR JUGADOR
+            </h2>
+            <input type="hidden" id="mId" />
+            <div class="form-grid">
+                <div class="form-field full"><label>Nombre completo <span class="req">*</span></label><input type="text"
+                        id="mNombre" /></div>
+                <div class="form-field"><label>Fecha de nacimiento <span class="req">*</span></label><input type="date"
+                        id="mFecha" /></div>
+                <div class="form-field"><label>Posicion</label><input type="text" id="mPosicion" /></div>
+                <div class="form-field"><label>Estado</label>
+                    <select id="mEstado">
+                        <option value="true">Activo</option>
+                        <option value="false">Inactivo</option>
+                    </select>
+                </div>
+                <div class="form-field"><label>Dorsal</label><input type="text" id="mDorsal" /></div>
+                <div class="form-field"><label>Score</label><input type="text" id="mScore" /></div>
+                <div class="form-field"><label>Equipo <span class="req">*</span></label><select id="mEquipo"></select>
+                </div>
+                <div class="form-field"><label>Estado</label><select id="mActivo">
+                        <option value="true">Activo</option>
+                        <option value="false">Inactivo</option>
+                    </select></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline">Cancelar</button>
+                <button class="btn btn-primary">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    Guardar cambios
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FICHA MÉDICA -->
+    <div class="modal-overlay" id="modalFicha">
+        <div class="modal">
+            <button class="modal-close">✕</button>
+            <h2>
+                <svg style="width:20px;height:20px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:6px"
+                    viewBox="0 0 24 24">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                </svg>
+                FICHA MÉDICA
+            </h2>
+            <p id="fichaJugadorNombre" style="color:var(--text-muted);font-size:13px;margin-bottom:20px;"></p>
+            <div id="fichaContenido"></div>
+            <div class="modal-footer" id="fichaFooter"></div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        <div class="toast-dot"></div><span id="toastMsg"></span>
+    </div>
+
 </body>
 
 </html>

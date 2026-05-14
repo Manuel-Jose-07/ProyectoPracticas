@@ -1,0 +1,712 @@
+:root {
+    --primary: #1b7624;
+    --primary-rgb: 200, 16, 46;
+    --bg: #080808;
+    --surface: #111;
+    --border: #222;
+    --text: #f0f0f0;
+    --muted: #666;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* ── FONDO ANIMADO ── */
+.bg-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+}
+
+/* Grid de líneas */
+.bg-grid {
+    position: absolute;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    background-image:
+        linear-gradient(rgba(var(--primary-rgb), .04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(var(--primary-rgb), .04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridDrift 20s linear infinite;
+}
+
+@keyframes gridDrift {
+    0% {
+        transform: translate(0, 0) rotate(-3deg);
+    }
+
+    100% {
+        transform: translate(60px, 60px) rotate(-3deg);
+    }
+}
+
+/* Orbes de luz */
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: .25;
+    animation: orbFloat linear infinite;
+}
+
+.orb-1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(var(--primary-rgb), 1), transparent 70%);
+    top: -200px;
+    left: -200px;
+    animation-duration: 18s;
+    animation-name: orb1;
+}
+
+.orb-2 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(var(--primary-rgb), .6), transparent 70%);
+    bottom: -100px;
+    right: -100px;
+    animation-duration: 22s;
+    animation-name: orb2;
+}
+
+.orb-3 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(180, 20, 50, .5), transparent 70%);
+    top: 50%;
+    left: 50%;
+    animation-duration: 15s;
+    animation-name: orb3;
+}
+
+@keyframes orb1 {
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    33% {
+        transform: translate(100px, 80px);
+    }
+
+    66% {
+        transform: translate(-60px, 150px);
+    }
+}
+
+@keyframes orb2 {
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(-120px, -80px);
+    }
+}
+
+@keyframes orb3 {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.4);
+    }
+}
+
+/* Partículas flotantes */
+.particles {
+    position: absolute;
+    inset: 0;
+}
+
+.particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: rgba(var(--primary-rgb), .6);
+    border-radius: 50%;
+    animation: particleRise linear infinite;
+}
+
+@keyframes particleRise {
+    0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: .5;
+    }
+
+    100% {
+        transform: translateY(-20px) scale(1);
+        opacity: 0;
+    }
+}
+
+/* Línea diagonal decorativa */
+.diagonal-line {
+    position: absolute;
+    width: 2px;
+    height: 100vh;
+    background: linear-gradient(to bottom, transparent, rgba(var(--primary-rgb), .3), transparent);
+    transform-origin: top;
+    animation: lineScan 8s ease-in-out infinite;
+}
+
+.diagonal-line:nth-child(1) {
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.diagonal-line:nth-child(2) {
+    left: 75%;
+    animation-delay: 4s;
+}
+
+@keyframes lineScan {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: scaleY(0) translateY(-100%);
+    }
+
+    30% {
+        opacity: 1;
+    }
+
+    70% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: scaleY(1) translateY(0);
+    }
+}
+
+/* ── CONTENIDO CENTRAL ── */
+.main-container {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 80px;
+    padding: 40px;
+}
+
+/* LADO IZQUIERDO — branding */
+.brand-side {
+    flex: 1;
+    max-width: 480px;
+    opacity: 0;
+    animation: fadeSlideLeft .8s ease .2s forwards;
+}
+
+@keyframes fadeSlideLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.brand-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(var(--primary-rgb), .1);
+    border: 1px solid rgba(var(--primary-rgb), .3);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--primary);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+}
+
+.brand-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: .4;
+        transform: scale(.7);
+    }
+}
+
+.brand-logo {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 3px solid var(--primary);
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: 0 0 40px rgba(var(--primary-rgb), .3);
+    animation: logoGlow 3s ease-in-out infinite;
+}
+
+@keyframes logoGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 40px rgba(var(--primary-rgb), .3);
+    }
+
+    50% {
+        box-shadow: 0 0 70px rgba(var(--primary-rgb), .5);
+    }
+}
+
+.brand-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.brand-logo-ph {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--primary);
+    letter-spacing: 2px;
+}
+
+.brand-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 6vw, 80px);
+    letter-spacing: 4px;
+    line-height: .95;
+    color: var(--text);
+    margin-bottom: 16px;
+}
+
+.brand-title .accent {
+    color: var(--primary);
+}
+
+.brand-subtitle {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 380px;
+    margin-bottom: 36px;
+}
+
+.brand-stats {
+    display: flex;
+    gap: 32px;
+}
+
+.stat {
+    opacity: 0;
+    animation: fadeUp .5s ease forwards;
+}
+
+.stat:nth-child(1) {
+    animation-delay: .6s;
+}
+
+.stat:nth-child(2) {
+    animation-delay: .75s;
+}
+
+.stat:nth-child(3) {
+    animation-delay: .9s;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 2px;
+    color: var(--primary);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+/* Separador vertical */
+.divider {
+    width: 1px;
+    height: 420px;
+    background: linear-gradient(to bottom, transparent, var(--border) 30%, var(--border) 70%, transparent);
+    flex-shrink: 0;
+    opacity: 0;
+    animation: fadeIn .5s ease .4s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* LADO DERECHO — acceso */
+.access-side {
+    width: 360px;
+    flex-shrink: 0;
+    opacity: 0;
+    animation: fadeSlideRight .8s ease .3s forwards;
+}
+
+@keyframes fadeSlideRight {
+    from {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.access-card {
+    background: rgba(17, 17, 17, .9);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px;
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+}
+
+.access-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+
+    0%,
+    100% {
+        opacity: .5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+.access-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+
+.access-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 28px;
+}
+
+/* Selector de rol */
+.role-tabs {
+    display: flex;
+    gap: 6px;
+    background: #0a0a0a;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 24px;
+}
+
+.role-tab {
+    flex: 1;
+    padding: 10px;
+    background: none;
+    border: none;
+    border-radius: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.role-tab.active {
+    background: var(--primary);
+    color: #fff;
+}
+
+.role-tab:not(.active):hover {
+    color: var(--text);
+    background: #1a1a1a;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.field-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.field-input {
+    width: 100%;
+    padding: 11px 14px;
+    background: #0d0d0d;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.field-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), .1);
+}
+
+.field-input::placeholder {
+    color: #333;
+}
+
+/* Contraseña de admin */
+.admin-hint {
+    background: rgba(var(--primary-rgb), .06);
+    border: 1px solid rgba(var(--primary-rgb), .15);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: rgba(var(--primary-rgb), 1);
+    margin-bottom: 20px;
+    display: none;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-hint.visible {
+    display: flex;
+}
+
+.btn-access {
+    width: 100%;
+    padding: 13px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 9px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: .5px;
+    transition: all .2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-access::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, .1), transparent);
+    opacity: 0;
+    transition: opacity .2s;
+}
+
+.btn-access:hover {
+    opacity: .9;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(var(--primary-rgb), .35);
+}
+
+.btn-access:hover::after {
+    opacity: 1;
+}
+
+.btn-access:active {
+    transform: translateY(0);
+}
+
+.access-footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* Error shake */
+.shake {
+    animation: shake .4s ease;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-8px);
+    }
+
+    40% {
+        transform: translateX(8px);
+    }
+
+    60% {
+        transform: translateX(-6px);
+    }
+
+    80% {
+        transform: translateX(6px);
+    }
+}
+
+.error-msg {
+    font-size: 12px;
+    color: #e74c3c;
+    text-align: center;
+    margin-top: 10px;
+    opacity: 0;
+    transition: opacity .2s;
+}
+
+.error-msg.visible {
+    opacity: 1;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+    .main-container {
+        flex-direction: column;
+        gap: 40px;
+        overflow-y: auto;
+        padding: 32px 20px;
+    }
+
+    html,
+    body {
+        overflow: auto;
+        height: auto;
+    }
+
+    .divider {
+        display: none;
+    }
+
+    .brand-side {
+        max-width: 100%;
+        text-align: center;
+    }
+
+    .brand-logo {
+        margin: 0 auto 24px;
+    }
+
+    .brand-stats {
+        justify-content: center;
+    }
+
+    .access-side {
+        width: 100%;
+        max-width: 400px;
+    }
+}

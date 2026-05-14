@@ -2,108 +2,196 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipos - La Liara Balompie</title>
-    <link rel="stylesheet" href="../CSS/estiloEquipo.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Equipos - La Liara Balompie</title>
+  <link rel="stylesheet" href="../CSS/estiloEquipo.css" />
 </head>
 
 <body>
-    <div class="container">
-        <h2>Equipos</h2>
-        <div class="form-card">
-            <div class="form-row">
-                <div class="field">
-                    <label for="inp-categoria">Categoria</label>
-                    <input type="text" id="inp-categoria" placeholder="Categoria del equipo">
-                </div>
-                <div class="field">
-                    <label for="inp-grupo">Grupo</label>
-                    <input type="text" id="inp-grupo" placeholder="Grupo del equipo">
-                </div>
-                <button class="btn-buscar" id="btn-buscar" onclick="buscar()">Buscar</button>
-            </div>
-        </div>
-        <button class="btn-action btn-eliminar" onclick="crearEquipo()">Crear</button>
-        <div class="status-bar" id="status"></div>
-   <div class="table-wrap">
+
+  <nav>
+    <div class="nav-logo-wrap" title="Inicio">
+      <img class="club-logo" src="../img/logoLiara.png" alt="logo-liara" />
+    </div>
+
+
+    <span class="nav-sep"></span>
+    <div class="nav-links">
+      <a href="jugador.html">Jugadores</a>
+      <a href="equipo.html" class="active">Equipos</a>
+      <a href="staff.html">Staffs</a>
+      <a href="partido.html">Partidos</a>
+    </div>
+    <div class="nav-right"></div>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <div>
+        <h1>
+          <svg
+            style="width:32px;height:32px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:8px"
+            viewBox="0 0 24 24">
+            <rect x="2" y="7" width="20" height="14" rx="2" />
+            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+            <line x1="12" y1="12" x2="12" y2="16" />
+            <line x1="10" y1="14" x2="14" y2="14" />
+          </svg>
+          EQUIPOS
+        </h1>
+        <p>Administración de equipos del club</p>
+      </div>
+      <button class="btn btn-primary">
+        <svg viewBox="0 0 24 24">
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        Nuevo equipo
+      </button>
+    </div>
+
+    <div class="search-bar">
+      <div class="field">
+        <label>Categoría</label>
+        <input type="text" id="busCategoria" placeholder="Senior, Juvenil..." />
+      </div>
+      <div class="field">
+        <label>Grupo</label>
+        <input type="text" id="busGrupo" placeholder="A, B..." />
+      </div>
+      <button class="btn btn-primary">
+        <svg viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        Buscar
+      </button>
+      <button class="btn btn-outline">
+        <svg viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+        Limpiar
+      </button>
+    </div>
+
+    <div class="table-wrap">
       <table>
         <thead>
           <tr>
             <th>Código</th>
             <th>Descripción</th>
-            <th>Categoria</th>
+            <th>Categoría</th>
             <th>Grupo</th>
+            <th>Acciones</th>
           </tr>
         </thead>
-        <tbody id="tabla-body">
-          <tr class="empty-row">
-            <td colspan="4">Realiza una búsqueda para ver resultados</td>
+        <tbody id="tabla">
+          <tr>
+            <td colspan="5">
+              <div class="empty-state">
+                <div class="icon">👕</div>
+                <p>Pulsa Buscar para cargar los equipos</p>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
-  </div>
+  </main>
 
-
-  <!-- Modal editar equipo -->
-  <div class="modal-overlay" id="modal-overlay">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-codigo">
-      <div class="modal-header">
-        <h3 id="modal-codigo">Modificar Equipo</h3>
-        <button class="modal-close" onclick="cerrarModal()" aria-label="Cerrar">&#10005;</button>
-      </div>
-      <div class="modal-body">
-       <div class="field">
-          <label for="modal-inp-codigo">Código</label>
-          <input type="text" id="modal-crear-codigo" placeholder="Escribe el código">
+  <!-- MODAL CREAR -->
+  <div class="modal-overlay" id="modalCrear">
+    <div class="modal">
+      <button class="modal-close">✕</button>
+      <h2>
+        <svg
+          style="width:20px;height:20px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:6px"
+          viewBox="0 0 24 24">
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        NUEVO EQUIPO
+      </h2>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Código <span class="req">*</span></label>
+          <input type="text" id="cCodigo" placeholder="EQ001" />
         </div>
-        <div class="field">
-          <label for="modal-inp-descripcion">Descripción</label>
-          <input type="text" id="modal-crear-descripcion" placeholder="Escribe la descripcion">
+        <div class="form-field full">
+          <label>Descripción</label>
+          <input type="text" id="cDescripcion" placeholder="Descripción del equipo..." />
         </div>
-        <div class="field">
-          <label for="modal-inp-categoria">Categoria</label>
-          <input type="text" id="modal-crear-categoria" placeholder="Escribe la categoria">
+        <div class="form-field">
+          <label>Categoría <span class="req">*</span></label>
+          <input type="text" id="cCategoria" placeholder="Senior" />
         </div>
-      </div>
+        <div class="form-field">
+          <label>Grupo <span class="req">*</span></label>
+          <input type="text" id="cGrupo" placeholder="A" />
+        </div>
       </div>
       <div class="modal-footer">
-        <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
-        <button class="btn-aceptar" onclick="guardarEdicion()">Aceptar</button>
+        <button class="btn btn-outline">Cancelar</button>
+        <button class="btn btn-primary">
+          <svg viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          Crear equipo
+        </button>
       </div>
     </div>
   </div>
 
-
-   <!-- Modal crear equipo -->
-  <div class="modal-overlay" id="modal-overlay-crear">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-codigo">
-      <div class="modal-header">
-        <button class="modal-close" onclick="cerrarModalCrear()" aria-label="Cerrar">&#10005;</button>
-      </div>
-      <div class="modal-body">
-        <p class="modal-meta" id="modal-meta"></p>
-        <div class="field">
-          <label for="modal-inp-codigo">Código</label>
-          <input type="text" id="modal-crear-codigo" placeholder="Escribe el código">
+  <!-- MODAL MODIFICAR -->
+  <div class="modal-overlay" id="modalModificar">
+    <div class="modal">
+      <button class="modal-close">✕</button>
+      <h2>
+        <svg
+          style="width:20px;height:20px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:6px"
+          viewBox="0 0 24 24">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+        </svg>
+        MODIFICAR EQUIPO
+      </h2>
+      <input type="hidden" id="mId" />
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Código <span class="req">*</span></label>
+          <input type="text" id="mCodigo" />
         </div>
-        <div class="field">
-          <label for="modal-inp-descripcion">Descripción</label>
-          <input type="text" id="modal-crear-descripcion" placeholder="Escribe la descripcion">
+        <div class="form-field full">
+          <label>Descripción</label>
+          <input type="text" id="mDescripcion" />
         </div>
-        <div class="field">
-          <label for="modal-inp-categoria">Categoria</label>
-          <input type="text" id="modal-crear-categoria" placeholder="Escribe la categoria">
+        <div class="form-field">
+          <label>Categoría <span class="req">*</span></label>
+          <input type="text" id="mCategoria" />
+        </div>
+        <div class="form-field">
+          <label>Grupo <span class="req">*</span></label>
+          <input type="text" id="mGrupo" />
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn-cancelar" onclick="cerrarModalCrear()">Cancelar</button>
-        <button class="btn-aceptar" onclick="guardarCrearEquipo()">Aceptar</button>
+        <button class="btn btn-outline">Cancelar</button>
+        <button class="btn btn-primary">
+          <svg viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          Guardar cambios
+        </button>
       </div>
     </div>
   </div>
-        <script src="../JS/scriptEquipo.js"></script>
+
+  <div class="toast" id="toast">
+    <div class="toast-dot"></div><span id="toastMsg"></span>
+  </div>
+
 </body>
 
 </html>
