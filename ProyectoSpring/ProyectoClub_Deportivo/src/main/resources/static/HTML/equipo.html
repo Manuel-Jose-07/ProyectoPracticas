@@ -42,7 +42,7 @@
         </h1>
         <p>Administración de equipos del club</p>
       </div>
-      <button class="btn btn-primary">
+      <button class="btn btn-primary admin-only" onclick="abrirModalCrear()">
         <svg viewBox="0 0 24 24">
           <line x1="12" y1="5" x2="12" y2="19" />
           <line x1="5" y1="12" x2="19" y2="12" />
@@ -60,14 +60,14 @@
         <label>Grupo</label>
         <input type="text" id="busGrupo" placeholder="A, B..." />
       </div>
-      <button class="btn btn-primary">
+      <button class="btn btn-primary" onclick="buscarEquipos()">
         <svg viewBox="0 0 24 24">
           <circle cx="11" cy="11" r="8" />
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
         </svg>
         Buscar
       </button>
-      <button class="btn btn-outline">
+      <button class="btn btn-outline" onclick="limpiarFiltros()">
         <svg viewBox="0 0 24 24">
           <line x1="18" y1="6" x2="6" y2="18" />
           <line x1="6" y1="6" x2="18" y2="18" />
@@ -134,7 +134,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-outline">Cancelar</button>
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" onclick="crearEquipo()">
           <svg viewBox="0 0 24 24">
             <polyline points="20 6 9 17 4 12" />
           </svg>
@@ -178,7 +178,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-outline">Cancelar</button>
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" onclick="ejecutarModificar()">
           <svg viewBox="0 0 24 24">
             <polyline points="20 6 9 17 4 12" />
           </svg>
@@ -192,6 +192,7 @@
     <div class="toast-dot"></div><span id="toastMsg"></span>
   </div>
 
+  <script src="../JS/scriptEquipo.js"></script>
 </body>
 
 </html>

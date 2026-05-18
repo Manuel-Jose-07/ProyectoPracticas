@@ -167,5 +167,44 @@ public class ControladoresUsuario {
 		return ResponseEntity.ok().body("La modificación se ha ejecutado con éxito");
 
 	}
+	
+	@GetMapping("/login")
+	public ResponseEntity<?> loginUsuario(@RequestParam String nombre, @RequestParam String password) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/club_deportivo", "usuario", "usuario");
+			
+			String sentencia = "SELECT esAdmin FROM usuario WHERE nombre = ? AND password = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sentencia);
+			pstmt.setString(1, nombre);
+			pstmt.setString(2, password);
+			
+			ResultSet rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				boolean esAdminBD = rs.getBoolean("esAdmin");
+				
+				rs.close();
+				pstmt.close();
+				conn.close();
+				
+				// Devolvemos texto plano puro según lo que tienes en la Base de Datos
+				if (esAdminBD) {
+					return ResponseEntity.ok().body("admin");
+				} else {
+					return ResponseEntity.ok().body("usuario");
+				}
+			} else {
+				rs.close();
+				pstmt.close();
+				conn.close();
+				return ResponseEntity.status(401).body("incorrecto");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("error");
+		}
+	}
 
 }
