@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Partidos - La Liara Balompié</title>
+  <link rel="stylesheet" href="CSS/estiloEquipo.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo-wrap" title="Inicio" onclick="window.location.href='equipo.html'">
+    <img class="club-logo" src="img/logoLiara.png" alt="logo-liara" />
+  </div>
+  <span class="nav-sep"></span>
+  <div class="nav-links">
+    <a href="jugador.html">Jugadores</a>
+    <a href="equipo.html">Equipos</a>
+    <a href="staff.html">Staffs</a>
+    <a href="partido.html" class="active">Partidos</a>
+    <a href="fichaMedica.html" class="admin-only">Fichas Médicas</a>
+  </div>
+  <div class="nav-right"></div>
+</nav>
+
+<main>
+  <div class="page-header">
+    <div>
+      <h1>
+        <svg style="width:32px;height:32px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:8px" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
+          <path d="M2 12h20"/>
+        </svg>
+        PARTIDOS
+      </h1>
+      <p>Calendario y resultados del club</p>
+    </div>
+    <button class="btn btn-primary admin-only" onclick="abrirModalCrear()">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Nuevo partido
+    </button>
+  </div>
+
+  <div class="search-bar">
+    <div class="field">
+      <label>Rival</label>
+      <input type="text" id="busRival" placeholder="Nombre del rival..." />
+    </div>
+    <div class="field">
+      <label>ID Equipo</label>
+      <input type="number" id="busEquipo" placeholder="ID del equipo" />
+    </div>
+    <button class="btn btn-primary" onclick="buscarPartidos()">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Buscar
+    </button>
+    <button class="btn btn-outline" onclick="limpiarFiltros()">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      Limpiar
+    </button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Rival</th>
+          <th>Lugar</th>
+          <th>Local</th>
+          <th>Resultado</th>
+          <th>Goles</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tabla">
+        <tr>
+          <td colspan="9"><div class="empty-state"><div class="icon">🏟️</div><p>Pulsa Buscar para cargar los partidos</p></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- MODAL CREAR -->
+<div class="modal-overlay" id="modalCrear">
+  <div class="modal" style="max-width:600px">
+    <button class="modal-close">✕</button>
+    <h2>
+      <svg style="width:20px;height:20px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      NUEVO PARTIDO
+    </h2>
+    <div class="form-grid">
+      <div class="form-field">
+        <label>ID Equipo <span class="req">*</span></label>
+        <input type="number" id="cEquipo" placeholder="ID del equipo" />
+      </div>
+      <div class="form-field">
+        <label>Rival <span class="req">*</span></label>
+        <input type="text" id="cRival" placeholder="Nombre del rival" />
+      </div>
+      <div class="form-field">
+        <label>Fecha <span class="req">*</span></label>
+        <input type="date" id="cFecha" />
+      </div>
+      <div class="form-field">
+        <label>Hora <span class="req">*</span></label>
+        <input type="time" id="cHora" />
+      </div>
+      <div class="form-field full">
+        <label>Lugar <span class="req">*</span></label>
+        <input type="text" id="cLugar" placeholder="Estadio / Campo" />
+      </div>
+      <div class="form-field">
+        <label>Local <span class="req">*</span></label>
+        <input type="text" id="cLocal" placeholder="Casa / Visitante" />
+      </div>
+      <div class="form-field">
+        <label>Resultado <span class="req">*</span></label>
+        <select id="cResultado">
+          <option value="por_disputar">Por disputar</option>
+          <option value="ganado">Ganado</option>
+          <option value="empatado">Empatado</option>
+          <option value="perdido">Perdido</option>
+          <option value="suspendido">Suspendido</option>
+          <option value="cancelado">Cancelado</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Goles a favor</label>
+        <input type="number" id="cGolesF" min="0" placeholder="0" />
+      </div>
+      <div class="form-field">
+        <label>Goles en contra</label>
+        <input type="number" id="cGolesC" min="0" placeholder="0" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline">Cancelar</button>
+      <button class="btn btn-primary" onclick="crearPartido()">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Crear partido
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MODIFICAR -->
+<div class="modal-overlay" id="modalModificar">
+  <div class="modal" style="max-width:600px">
+    <button class="modal-close">✕</button>
+    <h2>
+      <svg style="width:20px;height:20px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+      </svg>
+      MODIFICAR PARTIDO
+    </h2>
+    <input type="hidden" id="mId" />
+    <div class="form-grid">
+      <div class="form-field">
+        <label>ID Equipo <span class="req">*</span></label>
+        <input type="number" id="mEquipo" />
+      </div>
+      <div class="form-field">
+        <label>Rival <span class="req">*</span></label>
+        <input type="text" id="mRival" />
+      </div>
+      <div class="form-field">
+        <label>Fecha <span class="req">*</span></label>
+        <input type="date" id="mFecha" />
+      </div>
+      <div class="form-field">
+        <label>Hora <span class="req">*</span></label>
+        <input type="time" id="mHora" />
+      </div>
+      <div class="form-field full">
+        <label>Lugar <span class="req">*</span></label>
+        <input type="text" id="mLugar" />
+      </div>
+      <div class="form-field">
+        <label>Local <span class="req">*</span></label>
+        <input type="text" id="mLocal" />
+      </div>
+      <div class="form-field">
+        <label>Resultado <span class="req">*</span></label>
+        <select id="mResultado">
+          <option value="por_disputar">Por disputar</option>
+          <option value="ganado">Ganado</option>
+          <option value="empatado">Empatado</option>
+          <option value="perdido">Perdido</option>
+          <option value="suspendido">Suspendido</option>
+          <option value="cancelado">Cancelado</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Goles a favor</label>
+        <input type="number" id="mGolesF" min="0" />
+      </div>
+      <div class="form-field">
+        <label>Goles en contra</label>
+        <input type="number" id="mGolesC" min="0" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline">Cancelar</button>
+      <button class="btn btn-primary" onclick="ejecutarModificar()">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Guardar cambios
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><div class="toast-dot"></div><span id="toastMsg"></span></div>
+<script src="JS/scriptPartido.js"></script>
+</body>
+</html>

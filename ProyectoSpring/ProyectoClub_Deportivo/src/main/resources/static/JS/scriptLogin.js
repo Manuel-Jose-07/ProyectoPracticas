@@ -1,130 +1,97 @@
-// ── 1. EFECTO VISUAL DE PARTÍCULAS ────────────────
-const container = document.getElementById('particles');
-if (container) {
+// ── Partículas ──────────────────────────────────────────
+(function generarParticulas() {
+  const container = document.getElementById('particles');
+  if (!container) return;
   for (let i = 0; i < 30; i++) {
     const p = document.createElement('div');
     p.className = 'particle';
-    p.style.left = Math.random() * 100 + '%';
-    p.style.animationDuration = (8 + Math.random() * 12) + 's';
-    p.style.animationDelay   = (-Math.random() * 20) + 's';
-    p.style.width  = (1 + Math.random() * 3) + 'px';
-    p.style.height = p.style.width;
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      animation-duration: ${6 + Math.random() * 10}s;
+      animation-delay: ${Math.random() * 8}s;
+      width: ${1 + Math.random() * 2}px;
+      height: ${1 + Math.random() * 2}px;
+      opacity: ${0.3 + Math.random() * 0.5};
+    `;
     container.appendChild(p);
   }
+})();
+
+// ── Stats en el login ────────────────────────────────────
+async function cargarStats() {
+  try {
+    const [jugadores, equipos, partidos] = await Promise.allSettled([
+      fetch('http://localhost:8080/busquedaJugadores').then(r => r.json()),
+      fetch('http://localhost:8080/busquedaEquipos').then(r => r.json()),
+      fetch('http://localhost:8080/busquedaPartidos').then(r => r.json()),
+    ]);
+    animarNum('statJugadores', jugadores.status === 'fulfilled' ? jugadores.value.length : '—');
+    animarNum('statEquipos', equipos.status === 'fulfilled' ? equipos.value.length : '—');
+    animarNum('statPartidos', partidos.status === 'fulfilled' ? partidos.value.length : '—');
+  } catch (_) { /* silencioso */ }
 }
 
-// ── 2. FUNCIÓN DE INICIO DE SESIÓN CON SPRING ──────
-async function acceder() {
-  const usuario = document.getElementById('usuInput').value.trim();
-  const password = document.getElementById('passInput').value;
+function animarNum(id, target) {
+  const el = document.getElementById(id);
+  if (!el || typeof target !== 'number') { el && (el.textContent = target); return; }
+  let current = 0;
+  const step = Math.ceil(target / 30);
+  const timer = setInterval(() => {
+    current = Math.min(current + step, target);
+    el.textContent = current;
+    if (current >= target) clearInterval(timer);
+  }, 40);
+}
 
-  if (!usuario || !password) {
-    mostrarError("Por favor, rellena todos los campos.");
+cargarStats();
+
+// ── Acceder ──────────────────────────────────────────────
+async function acceder() {
+  const nombre = document.getElementById('usuInput').value.trim();
+  const password = document.getElementById('passInput').value;
+  const card = document.getElementById('accessCard');
+  const errorMsg = document.getElementById('errorMsg');
+
+  if (!nombre || !password) {
+    mostrarError('Por favor rellena todos los campos');
+    card.classList.add('shake');
+    setTimeout(() => card.classList.remove('shake'), 400);
     return;
   }
 
   try {
-    // Apuntamos al backend directamente sin localhost:8080 para que no salte el bloqueo
-    const url = `/login?nombre=${encodeURIComponent(usuario)}&password=${encodeURIComponent(password)}`;
-    
-    const respuesta = await fetch(url);
-    
-    if (respuesta.ok) {
-      // Leemos la respuesta como texto plano ("admin" o "usuario")
-      const rolDetectado = await respuesta.text(); 
-      
-      // Guardamos en la memoria del navegador para recordar el rol en el index
-      sessionStorage.setItem('rol', rolDetectado);
-      sessionStorage.setItem('usuarioNombre', usuario);
+    const resp = await fetch(`http://localhost:8080/login?nombre=${encodeURIComponent(nombre)}&password=${encodeURIComponent(password)}`);
+    const rol = await resp.text();
 
-      // Efecto visual de salida
-      document.querySelector('.main-container').style.transition = 'opacity .4s, transform .4s';
-      document.querySelector('.main-container').style.opacity    = '0';
-      document.querySelector('.main-container').style.transform  = 'scale(.97)';
-      
-      // Como login.html e index.html están en la misma carpeta 'HTML', cargamos index.html a secas
-      setTimeout(() => { 
-        window.location.href = 'equipo.html'; 
-      }, 400);
-
-    } else {
-      mostrarError("Usuario o contraseña incorrectos.");
+    if (resp.status === 401 || rol === 'incorrecto') {
+      mostrarError('Usuario o contraseña incorrectos');
+      card.classList.add('shake');
+      setTimeout(() => card.classList.remove('shake'), 400);
+      return;
     }
 
-  } catch (error) {
-    console.error(error);
-    mostrarError("No se pudo conectar con la base de datos.");
+    // Guardar sesión
+    sessionStorage.setItem('rol', rol);
+    sessionStorage.setItem('usuario', nombre);
+
+    // Redirigir
+    window.location.href = 'equipo.html';
+
+  } catch (e) {
+    mostrarError('No se pudo conectar con el servidor');
+    card.classList.add('shake');
+    setTimeout(() => card.classList.remove('shake'), 400);
   }
 }
 
-function mostrarError(mensaje) {
-  const errorMsg = document.getElementById('errorMsg');
-  const accessCard = document.getElementById('accessCard');
-  
-  errorMsg.textContent = mensaje;
-  errorMsg.classList.add('visible');
-  
-  accessCard.classList.add('shake');
-  setTimeout(() => accessCard.classList.remove('shake'), 400);
+function mostrarError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg;
+  el.classList.add('visible');
+  setTimeout(() => el.classList.remove('visible'), 3500);
 }
 
-// Función para mostrar el error visualmente
-function mostrarError(mensaje) {
-  const errorMsg = document.getElementById('errorMsg');
-  const accessCard = document.getElementById('accessCard');
-  
-  errorMsg.textContent = mensaje;
-  errorMsg.classList.add('visible');
-  
-  accessCard.classList.add('shake');
-  setTimeout(() => accessCard.classList.remove('shake'), 400);
-}
-
-function mostrarError(mensaje) {
-  const errorMsg = document.getElementById('errorMsg');
-  const accessCard = document.getElementById('accessCard');
-  
-  errorMsg.textContent = mensaje;
-  errorMsg.classList.add('visible');
-  
-  accessCard.classList.add('shake');
-  setTimeout(() => accessCard.classList.remove('shake'), 400);
-}
-
-// ── 3. CONTADORES DESDE LA BASE DE DATOS ───────────
-async function cargarStats() {
-  const API = 'http://localhost:8080';
-  try {
-    const [jugadores, equipos, partidos] = await Promise.all([
-      fetch(`${API}/busquedaJugadores`).then(r => r.json()),
-      fetch(`${API}/busquedaEquipos`).then(r => r.json()),
-      fetch(`${API}/busquedaPartidos`).then(r => r.json()),
-    ]);
-    
-    animarNumero('statJugadores', jugadores.length);
-    animarNumero('statEquipos',   equipos.length);
-    animarNumero('statPartidos',  partidos.length);
-  } catch {
-    ['statJugadores','statEquipos','statPartidos'].forEach(id => {
-      if(document.getElementById(id)) document.getElementById(id).textContent = '0';
-    });
-  }
-}
-
-function animarNumero(id, final) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const dur = 1200;
-  const start = performance.now();
-  function step(now) {
-    const t = Math.min((now - start) / dur, 1);
-    const ease = 1 - Math.pow(1 - t, 3);
-    el.textContent = Math.round(ease * final);
-    if (t < 1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  cargarStats();
+// Enter para acceder
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') acceder();
 });

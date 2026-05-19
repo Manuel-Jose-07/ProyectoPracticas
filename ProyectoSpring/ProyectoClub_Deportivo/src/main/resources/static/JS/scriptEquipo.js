@@ -1,178 +1,180 @@
-// ── 1. AL CARGAR LA PÁGINA: CONFIGURAR EL ROL ──
-document.addEventListener("DOMContentLoaded", () => {
-    const rol = sessionStorage.getItem('rol');
-    
-    // Si es administrador, añadimos 'is-admin' al body para usar el CSS de tu profesor
-    if (rol === 'admin') {
-        document.body.classList.add('is-admin');
-    }
-    // NOTA: No tocamos la tabla aquí. Se queda cargada la camiseta original del HTML.
-});
+// ── Sesión / Roles ───────────────────────────────────────
+(function initSesion() {
+  const rol = sessionStorage.getItem('rol');
+  if (!rol) { window.location.href = 'login.html'; return; }
+  if (rol === 'admin') document.body.classList.add('is-admin');
+  renderNavUser(rol, sessionStorage.getItem('usuario') || '');
+})();
 
-// ── 2. FUNCIONES DE LOS FILTROS (BUSCAR Y LIMPIAR) ──
+function renderNavUser(rol, nombre) {
+  const right = document.querySelector('.nav-right');
+  if (!right) return;
+  right.innerHTML = `
+    <span class="nav-role-badge ${rol}"><span class="dot"></span>${nombre} · ${rol === 'admin' ? 'Administrador' : 'Usuario'}</span>
+    <button class="nav-logout" onclick="logout()">
+      <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>Salir
+    </button>`;
+}
 
+function logout() {
+  sessionStorage.clear();
+  window.location.href = 'login.html';
+}
+
+// ── Toast ────────────────────────────────────────────────
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.className = 'toast ' + type;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── Buscar ───────────────────────────────────────────────
 async function buscarEquipos() {
-    const tabla = document.getElementById('tabla');
-    
-    // Capturamos lo que el usuario escribió usando tus IDs del HTML: busCategoria y busGrupo
-    let categoria = document.getElementById('busCategoria').value.trim();
-    let grupo = document.getElementById('busGrupo').value.trim();
+  const cat = document.getElementById('busCategoria').value.trim();
+  const grp = document.getElementById('busGrupo').value.trim();
+  let url = 'http://localhost:8080/busquedaEquipos?';
+  if (cat) url += `categoria=${encodeURIComponent(cat)}&`;
+  if (grp) url += `grupo=${encodeURIComponent(grp)}`;
 
-    try {
-        let url = `/busquedaEquipos`;
-        let parametros = [];
-        
-        // SOLO añadimos parámetros a la URL si de verdad se ha escrito algo en los campos
-        if (categoria !== "") {
-            parametros.push(`categoria=${encodeURIComponent(categoria)}`);
-        }
-        if (grupo !== "") {
-            parametros.push(`grupo=${encodeURIComponent(grupo)}`);
-        }
-        
-        // Si hay filtros, se pegan (ej: /busquedaEquipos?categoria=Senior)
-        // SI AMBOS CAMPOS ESTÁN VACÍOS, la URL irá limpia como "/busquedaEquipos" y tu Java te devolverá TODOS los registros
-        if (parametros.length > 0) {
-            url += `?${parametros.join('&')}`;
-        }
+  document.getElementById('tabla').innerHTML = `
+    <tr><td colspan="5"><div class="empty-state"><div class="icon">⏳</div><p>Cargando...</p></div></td></tr>`;
 
-        const respuesta = await fetch(url);
-        
-        if (respuesta.ok) {
-            const equipos = await respuesta.json();
-            
-            // Vaciamos el cuerpo de la tabla (esto limpia la camiseta original o búsquedas previas)
-            tabla.innerHTML = ''; 
-            
-            // Si la consulta no trae ningún registro de la base de datos
-            if (equipos.length === 0) {
-                tabla.innerHTML = `
-                    <tr>
-                        <td colspan="5">
-                            <div class="empty-state">
-                                <div class="icon">🔍</div>
-                                <p>No se encontraron equipos con esos criterios.</p>
-                            </div>
-                        </td>
-                    </tr>`;
-                return;
-            }
-
-            const rol = sessionStorage.getItem('rol');
-
-            // Recorremos los equipos de la BD y pintamos las filas reales
-            equipos.forEach(eq => {
-                const fila = document.createElement('tr');
-                
-                let columnas = `
-                    <td>${eq.codigo}</td>
-                    <td>${eq.descripcion || 'Sin descripción'}</td>
-                    <td>${eq.categoria}</td>
-                    <td>${eq.grupo}</td>
-                `;
-
-                // Columna de acciones regulada por tu rol de sesión
-                if (rol === 'admin') {
-                    columnas += `
-                        <td class="td-actions">
-                            <button class="btn btn-outline btn-sm" onclick="abrirEditar('${eq.id_equipo}', '${eq.codigo}', '${eq.descripcion}', '${eq.categoria}', '${eq.grupo}')">Editar</button>
-                            <button class="btn btn-danger btn-sm" onclick="eliminarEquipo('${eq.id_equipo}')">Borrar</button>
-                        </td>`;
-                } else {
-                    columnas += `<td><span class="text-muted" style="font-size: 13px;">Solo lectura</span></td>`;
-                }
-
-                fila.innerHTML = columnas;
-                tabla.appendChild(fila);
-            });
-        }
-    } catch (error) {
-        console.error("Error al buscar:", error);
-        tabla.innerHTML = `<tr><td colspan="5" style="text-align:center; color:red; padding:20px;">Error al conectar con el servidor</td></tr>`;
-    }
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(await resp.text());
+    const data = await resp.json();
+    renderTabla(data);
+  } catch (e) {
+    showToast('Error al buscar equipos: ' + e.message, 'error');
+    document.getElementById('tabla').innerHTML = `
+      <tr><td colspan="5"><div class="empty-state"><div class="icon">⚠️</div><p>Error al cargar datos</p></div></td></tr>`;
+  }
 }
 
-// FUNCIÓN LIMPIAR: Deja los inputs vacíos y restaura la camiseta desde JS usando tu misma estructura nativa
+function renderTabla(equipos) {
+  const tbody = document.getElementById('tabla');
+  const esAdmin = document.body.classList.contains('is-admin');
+  if (!equipos.length) {
+    tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="icon">👕</div><p>No se encontraron equipos</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = equipos.map(e => `
+    <tr>
+      <td>${e.codigo}</td>
+      <td>${e.descripcion || '—'}</td>
+      <td>${e.categoria}</td>
+      <td>${e.grupo}</td>
+      <td>
+        <div class="td-actions">
+          ${esAdmin ? `
+            <button class="btn btn-icon btn-outline" title="Modificar" onclick="abrirModalModificar(${e.id_equipo},'${esc(e.codigo)}','${esc(e.descripcion||'')}','${esc(e.categoria)}','${esc(e.grupo)}')">
+              <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="btn btn-icon btn-danger" title="Eliminar" onclick="eliminarEquipo(${e.id_equipo})">
+              <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            </button>` : '<span style="color:var(--text-muted);font-size:12px">—</span>'}
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function esc(str) { return String(str).replace(/'/g, "\\'"); }
+
 function limpiarFiltros() {
-    document.getElementById('busCategoria').value = '';
-    document.getElementById('busGrupo').value = '';
-
-    const tabla = document.getElementById('tabla');
-    tabla.innerHTML = `
-        <tr>
-            <td colspan="5">
-                <div class="empty-state">
-                    <div class="icon">👕</div>
-                    <p>Pulsa Buscar para cargar los equipos</p>
-                </div>
-            </td>
-        </tr>`;
+  document.getElementById('busCategoria').value = '';
+  document.getElementById('busGrupo').value = '';
+  buscarEquipos();
 }
 
-
-// ── 3. OPERACIONES DE GESTIÓN (MODALES Y ACCIONES CRUD) ──
-
-function abrirModalCrear() { document.getElementById('modalCrear').classList.add('open'); }
-function cerrarModalCrear() { document.getElementById('modalCrear').classList.remove('open'); }
-function abrirModalModificar() { document.getElementById('modalModificar').classList.add('open'); }
-function cerrarModalModificar() { document.getElementById('modalModificar').classList.remove('open'); }
-
-// Vincular botones de cerrar modales (tanto la equis '✕' como el botón Cancelar)
-document.querySelectorAll('.modal-close, .modal-footer .btn-outline').forEach(boton => {
-    boton.addEventListener('click', () => {
-        cerrarModalCrear();
-        cerrarModalModificar();
-    });
-});
+// ── Modal Crear ──────────────────────────────────────────
+function abrirModalCrear() {
+  document.getElementById('cCodigo').value = '';
+  document.getElementById('cDescripcion').value = '';
+  document.getElementById('cCategoria').value = '';
+  document.getElementById('cGrupo').value = '';
+  document.getElementById('modalCrear').classList.add('open');
+}
 
 async function crearEquipo() {
-    const codigo = document.getElementById('cCodigo').value;
-    const descripcion = document.getElementById('cDescripcion').value;
-    const categoria = document.getElementById('cCategoria').value;
-    const grupo = document.getElementById('cGrupo').value;
+  const codigo = document.getElementById('cCodigo').value.trim();
+  const descripcion = document.getElementById('cDescripcion').value.trim();
+  const categoria = document.getElementById('cCategoria').value.trim();
+  const grupo = document.getElementById('cGrupo').value.trim();
+  if (!codigo || !categoria || !grupo) { showToast('Rellena los campos obligatorios', 'error'); return; }
 
-    try {
-        const url = `/crearEquipo?codigo=${encodeURIComponent(codigo)}&descripcion=${encodeURIComponent(descripcion)}&categoria=${encodeURIComponent(categoria)}&grupo=${encodeURIComponent(grupo)}`;
-        const respuesta = await fetch(url);
-        if (respuesta.ok) {
-            cerrarModalCrear();
-            buscarEquipos(); // Aplica la búsqueda con los filtros actuales
-        }
-    } catch (error) { console.error(error); }
+  let url = `http://localhost:8080/crearEquipo?codigo=${encodeURIComponent(codigo)}&categoria=${encodeURIComponent(categoria)}&grupo=${encodeURIComponent(grupo)}`;
+  if (descripcion) url += `&descripcion=${encodeURIComponent(descripcion)}`;
+
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(await resp.text());
+    showToast('Equipo creado correctamente', 'success');
+    cerrarModales();
+    buscarEquipos();
+  } catch (e) {
+    showToast('Error: ' + e.message, 'error');
+  }
 }
 
-async function eliminarEquipo(id) {
-    if (!confirm("¿Seguro que deseas eliminar este equipo?")) return;
-    try {
-        const respuesta = await fetch(`/eliminarEquipo?id_equipo=${id}`);
-        if (respuesta.ok) {
-            buscarEquipos();
-        }
-    } catch (error) { console.error(error); }
-}
-
-function abrirEditar(id, codigo, descripcion, categoria, grupo) {
-    document.getElementById('mId').value = id;
-    document.getElementById('mCodigo').value = codigo;
-    document.getElementById('mDescripcion').value = (descripcion === 'null' || descripcion === 'undefined' ? '' : descripcion);
-    document.getElementById('mCategoria').value = categoria;
-    document.getElementById('mGrupo').value = grupo;
-    abrirModalModificar();
+// ── Modal Modificar ──────────────────────────────────────
+function abrirModalModificar(id, codigo, descripcion, categoria, grupo) {
+  document.getElementById('mId').value = id;
+  document.getElementById('mCodigo').value = codigo;
+  document.getElementById('mDescripcion').value = descripcion;
+  document.getElementById('mCategoria').value = categoria;
+  document.getElementById('mGrupo').value = grupo;
+  document.getElementById('modalModificar').classList.add('open');
 }
 
 async function ejecutarModificar() {
-    const id = document.getElementById('mId').value;
-    const codigo = document.getElementById('mCodigo').value;
-    const descripcion = document.getElementById('mDescripcion').value;
-    const categoria = document.getElementById('mCategoria').value;
-    const grupo = document.getElementById('mGrupo').value;
+  const id = document.getElementById('mId').value;
+  const codigo = document.getElementById('mCodigo').value.trim();
+  const descripcion = document.getElementById('mDescripcion').value.trim();
+  const categoria = document.getElementById('mCategoria').value.trim();
+  const grupo = document.getElementById('mGrupo').value.trim();
+  if (!codigo || !categoria || !grupo) { showToast('Rellena los campos obligatorios', 'error'); return; }
 
-    try {
-        const url = `/modificarEquipo?id_equipo=${id}&codigo=${encodeURIComponent(codigo)}&descripcion=${encodeURIComponent(descripcion)}&categoria=${encodeURIComponent(categoria)}&grupo=${encodeURIComponent(grupo)}`;
-        const respuesta = await fetch(url);
-        if (respuesta.ok) {
-            cerrarModalModificar();
-            buscarEquipos();
-        }
-    } catch (error) { console.error(error); }
+  let url = `http://localhost:8080/modificarEquipo?id_equipo=${id}&codigo=${encodeURIComponent(codigo)}&categoria=${encodeURIComponent(categoria)}&grupo=${encodeURIComponent(grupo)}`;
+  if (descripcion) url += `&descripcion=${encodeURIComponent(descripcion)}`;
+
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(await resp.text());
+    showToast('Equipo modificado', 'success');
+    cerrarModales();
+    buscarEquipos();
+  } catch (e) {
+    showToast('Error: ' + e.message, 'error');
+  }
 }
+
+// ── Eliminar ─────────────────────────────────────────────
+async function eliminarEquipo(id) {
+  if (!confirm('¿Eliminar este equipo? Se borrarán también sus partidos y relaciones.')) return;
+  try {
+    const resp = await fetch(`http://localhost:8080/eliminarEquipo?id_equipo=${id}`);
+    if (!resp.ok) throw new Error(await resp.text());
+    showToast('Equipo eliminado', 'success');
+    buscarEquipos();
+  } catch (e) {
+    showToast('Error: ' + e.message, 'error');
+  }
+}
+
+// ── Cerrar modales ───────────────────────────────────────
+function cerrarModales() {
+  document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
+}
+
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('modal-overlay')) cerrarModales();
+  if (e.target.classList.contains('modal-close') || e.target.closest('.modal-close')) cerrarModales();
+  if (e.target.classList.contains('btn-outline') && e.target.closest('.modal-footer')) cerrarModales();
+});
+
+// Cargar al inicio
+buscarEquipos();
