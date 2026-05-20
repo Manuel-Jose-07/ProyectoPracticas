@@ -4,6 +4,9 @@
   if (!rol) { window.location.href = 'login.html'; return; }
   if (rol === 'admin') document.body.classList.add('is-admin');
   renderNavUser(rol, sessionStorage.getItem('usuario') || '');
+  if (rol !== 'admin') {
+    document.querySelectorAll('th.admin-only').forEach(th => th.style.display = 'none');
+  }
 })();
 
 function renderNavUser(rol, nombre) {
@@ -29,28 +32,61 @@ function showToast(msg, type = '') {
 }
 
 const RESULTADO_LABELS = {
-  ganado: { label: 'Ganado', cls: 'badge-green' },
-  empatado: { label: 'Empatado', cls: 'badge-warn' },
-  perdido: { label: 'Perdido', cls: 'badge-red' },
-  suspendido: { label: 'Suspendido', cls: 'badge-muted' },
-  cancelado: { label: 'Cancelado', cls: 'badge-muted' },
-  por_disputar: { label: 'Por disputar', cls: 'badge-blue' },
+  ganado:      { label: 'Ganado',      cls: 'badge-green' },
+  empatado:    { label: 'Empatado',    cls: 'badge-warn'  },
+  perdido:     { label: 'Perdido',     cls: 'badge-red'   },
+  suspendido:  { label: 'Suspendido',  cls: 'badge-muted' },
+  cancelado:   { label: 'Cancelado',   cls: 'badge-muted' },
+  por_disputar:{ label: 'Por disputar',cls: 'badge-blue'  },
 };
 
+// Cache de equipos para resolver nombre → id y mostrar nombre en tabla
+let equiposCache = null;
+async function cargarEquipos() {
+  if (equiposCache) return equiposCache;
+  try {
+    const resp = await fetch('http://localhost:8080/busquedaEquipos');
+    equiposCache = await resp.json();
+  } catch(_) { equiposCache = []; }
+  return equiposCache;
+}
+
+// ── Buscar ───────────────────────────────────────────────
 async function buscarPartidos() {
-  const rival = document.getElementById('busRival').value.trim();
-  const equipo = document.getElementById('busEquipo').value.trim();
-  let url = 'http://localhost:8080/busquedaPartidos?';
-  if (rival) url += `rival=${encodeURIComponent(rival)}&`;
-  if (equipo) url += `EQUIPO_id_equipo=${encodeURIComponent(equipo)}`;
+  const rival        = document.getElementById('busRival').value.trim();
+  const equipoNombre = document.getElementById('busEquipoNombre').value.trim();
 
   document.getElementById('tabla').innerHTML = `
     <tr><td colspan="9"><div class="empty-state"><div class="icon">⏳</div><p>Cargando...</p></div></td></tr>`;
 
   try {
+    const equipos = await cargarEquipos();
+    const equipoMap = {};
+    equipos.forEach(eq => equipoMap[eq.id_equipo] = `${eq.categoria} ${eq.grupo}`);
+
+    let equipoId = null;
+    if (equipoNombre) {
+      const match = equipos.find(eq =>
+        (eq.descripcion || '').toLowerCase().includes(equipoNombre.toLowerCase()) ||
+        `${eq.categoria} ${eq.grupo}`.toLowerCase().includes(equipoNombre.toLowerCase()) ||
+        eq.codigo.toLowerCase().includes(equipoNombre.toLowerCase())
+      );
+      if (match) {
+        equipoId = match.id_equipo;
+      } else {
+        document.getElementById('tabla').innerHTML = `
+          <tr><td colspan="9"><div class="empty-state"><div class="icon">🏟️</div><p>No se encontró ningún equipo con ese nombre</p></div></td></tr>`;
+        return;
+      }
+    }
+
+    let url = 'http://localhost:8080/busquedaPartidos?';
+    if (rival)    url += `rival=${encodeURIComponent(rival)}&`;
+    if (equipoId) url += `EQUIPO_id_equipo=${equipoId}`;
+
     const resp = await fetch(url);
     if (!resp.ok) throw new Error(await resp.text());
-    renderTabla(await resp.json());
+    renderTabla(await resp.json(), equipoMap);
   } catch (e) {
     showToast('Error: ' + e.message, 'error');
     document.getElementById('tabla').innerHTML = `
@@ -58,21 +94,22 @@ async function buscarPartidos() {
   }
 }
 
-function renderTabla(partidos) {
-  const tbody = document.getElementById('tabla');
+function renderTabla(partidos, equipoMap) {
+  const tbody  = document.getElementById('tabla');
   const esAdmin = document.body.classList.contains('is-admin');
   if (!partidos.length) {
     tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><div class="icon">🏟️</div><p>No se encontraron partidos</p></div></td></tr>`;
     return;
   }
   tbody.innerHTML = partidos.map(p => {
-    const res = RESULTADO_LABELS[p.resultado] || { label: p.resultado, cls: 'badge-muted' };
+    const res  = RESULTADO_LABELS[p.resultado] || { label: p.resultado, cls: 'badge-muted' };
     const goles = (p.goles_a_favor != null && p.goles_en_contra != null)
       ? `${p.goles_a_favor} — ${p.goles_en_contra}` : '—';
-    const hora = p.hora ? p.hora.substring(0, 5) : '—';
+    const hora  = p.hora ? p.hora.substring(0, 5) : '—';
+    const equipo = equipoMap[p.equipoid_equipo || p.equipo_id_equipo || p.EQUIPO_id_equipo] || '—';
     return `
     <tr>
-      <td>${p.id_partido}</td>
+      <td>${equipo}</td>
       <td>${p.fecha}</td>
       <td>${hora}</td>
       <td>${p.rival}</td>
@@ -80,27 +117,28 @@ function renderTabla(partidos) {
       <td>${p.local}</td>
       <td><span class="badge ${res.cls}">${res.label}</span></td>
       <td>${goles}</td>
-      <td>
+      ${esAdmin ? `<td>
         <div class="td-actions">
-          ${esAdmin ? `
-            <button class="btn btn-icon btn-outline" title="Modificar"
-              onclick="abrirModalModificar(${p.id_partido},${p.eQUIPO_id_equipo},'${esc(p.rival)}','${p.fecha}','${p.hora}','${esc(p.lugar)}','${esc(p.local)}','${p.resultado}',${p.goles_a_favor ?? 'null'},${p.goles_en_contra ?? 'null'})">
-              <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            </button>
-            <button class="btn btn-icon btn-danger" title="Eliminar" onclick="eliminarPartido(${p.id_partido})">
-              <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-            </button>` : '<span style="color:var(--text-muted);font-size:12px">—</span>'}
+          <button class="btn btn-icon btn-outline" title="Modificar"
+            onclick="abrirModalModificar(${p.id_partido},${p.equipoid_equipo || p.equipo_id_equipo || p.EQUIPO_id_equipo},'${esc(p.rival)}', '${p.fecha}','${p.hora}','${esc(p.lugar)}','${esc(p.local)}','${p.resultado}',${p.goles_a_favor ?? 'null'},${p.goles_en_contra ?? 'null'})">
+            <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="btn btn-icon btn-danger" title="Eliminar" onclick="eliminarPartido(${p.id_partido})">
+            <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          </button>
         </div>
-      </td>
+      </td>` : ''}
     </tr>`;
   }).join('');
 }
 
 function esc(str) { return String(str).replace(/'/g, "\\'"); }
+
 function limpiarFiltros() {
   document.getElementById('busRival').value = '';
-  document.getElementById('busEquipo').value = '';
-  buscarPartidos();
+  document.getElementById('busEquipoNombre').value = '';
+  document.getElementById('tabla').innerHTML = `
+    <tr><td colspan="9"><div class="empty-state"><div class="icon">🏟️</div><p>Pulsa Buscar para cargar los partidos</p></div></td></tr>`;
 }
 
 function abrirModalCrear() {
@@ -110,15 +148,15 @@ function abrirModalCrear() {
 }
 
 async function crearPartido() {
-  const equipo = document.getElementById('cEquipo').value.trim();
-  const rival = document.getElementById('cRival').value.trim();
-  const fecha = document.getElementById('cFecha').value;
-  const hora = document.getElementById('cHora').value;
-  const lugar = document.getElementById('cLugar').value.trim();
-  const local = document.getElementById('cLocal').value.trim();
+  const equipo  = document.getElementById('cEquipo').value.trim();
+  const rival   = document.getElementById('cRival').value.trim();
+  const fecha   = document.getElementById('cFecha').value;
+  const hora    = document.getElementById('cHora').value;
+  const lugar   = document.getElementById('cLugar').value.trim();
+  const local   = document.getElementById('cLocal').value.trim();
   const resultado = document.getElementById('cResultado').value;
-  const golesF = document.getElementById('cGolesF').value.trim();
-  const golesC = document.getElementById('cGolesC').value.trim();
+  const golesF  = document.getElementById('cGolesF').value.trim();
+  const golesC  = document.getElementById('cGolesC').value.trim();
 
   if (!equipo || !rival || !fecha || !hora || !lugar || !local) {
     showToast('Rellena los campos obligatorios', 'error'); return;
@@ -132,36 +170,35 @@ async function crearPartido() {
     const resp = await fetch(url);
     if (!resp.ok) throw new Error(await resp.text());
     showToast('Partido creado', 'success');
-    cerrarModales();
-    buscarPartidos();
+    cerrarModales(); buscarPartidos();
   } catch (e) { showToast('Error: ' + e.message, 'error'); }
 }
 
 function abrirModalModificar(id, equipo, rival, fecha, hora, lugar, local, resultado, golesF, golesC) {
-  document.getElementById('mId').value = id;
-  document.getElementById('mEquipo').value = equipo;
-  document.getElementById('mRival').value = rival;
-  document.getElementById('mFecha').value = fecha;
-  document.getElementById('mHora').value = hora ? hora.substring(0, 5) : '';
-  document.getElementById('mLugar').value = lugar;
-  document.getElementById('mLocal').value = local;
+  document.getElementById('mId').value      = id;
+  document.getElementById('mEquipo').value  = equipo;
+  document.getElementById('mRival').value   = rival;
+  document.getElementById('mFecha').value   = fecha;
+  document.getElementById('mHora').value    = hora ? hora.substring(0, 5) : '';
+  document.getElementById('mLugar').value   = lugar;
+  document.getElementById('mLocal').value   = local;
   document.getElementById('mResultado').value = resultado;
-  document.getElementById('mGolesF').value = golesF !== null ? golesF : '';
-  document.getElementById('mGolesC').value = golesC !== null ? golesC : '';
+  document.getElementById('mGolesF').value  = golesF !== null ? golesF : '';
+  document.getElementById('mGolesC').value  = golesC !== null ? golesC : '';
   document.getElementById('modalModificar').classList.add('open');
 }
 
 async function ejecutarModificar() {
-  const id = document.getElementById('mId').value;
-  const equipo = document.getElementById('mEquipo').value.trim();
-  const rival = document.getElementById('mRival').value.trim();
-  const fecha = document.getElementById('mFecha').value;
-  const hora = document.getElementById('mHora').value;
-  const lugar = document.getElementById('mLugar').value.trim();
-  const local = document.getElementById('mLocal').value.trim();
+  const id       = document.getElementById('mId').value;
+  const equipo   = document.getElementById('mEquipo').value.trim();
+  const rival    = document.getElementById('mRival').value.trim();
+  const fecha    = document.getElementById('mFecha').value;
+  const hora     = document.getElementById('mHora').value;
+  const lugar    = document.getElementById('mLugar').value.trim();
+  const local    = document.getElementById('mLocal').value.trim();
   const resultado = document.getElementById('mResultado').value;
-  const golesF = document.getElementById('mGolesF').value.trim();
-  const golesC = document.getElementById('mGolesC').value.trim();
+  const golesF   = document.getElementById('mGolesF').value.trim();
+  const golesC   = document.getElementById('mGolesC').value.trim();
 
   if (!equipo || !rival || !fecha || !hora || !lugar || !local) {
     showToast('Rellena los campos obligatorios', 'error'); return;
@@ -175,8 +212,7 @@ async function ejecutarModificar() {
     const resp = await fetch(url);
     if (!resp.ok) throw new Error(await resp.text());
     showToast('Partido modificado', 'success');
-    cerrarModales();
-    buscarPartidos();
+    cerrarModales(); buscarPartidos();
   } catch (e) { showToast('Error: ' + e.message, 'error'); }
 }
 
@@ -199,4 +235,7 @@ document.addEventListener('click', e => {
   if (e.target.classList.contains('btn-outline') && e.target.closest('.modal-footer')) cerrarModales();
 });
 
-buscarPartidos();
+// Enter para buscar
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !document.querySelector('.modal-overlay.open')) buscarPartidos();
+});

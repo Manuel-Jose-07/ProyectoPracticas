@@ -1,3 +1,7 @@
+// Catálogos globales para la traducción en el Frontend
+let listaJugadoresGlobal = [];
+let listaPartidosGlobal = [];
+
 (function initSesion() {
   const rol = sessionStorage.getItem('rol');
   if (!rol) { window.location.href = 'login.html'; return; }
@@ -15,61 +19,103 @@ function renderNavUser(rol, nombre) {
         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
       </svg>Salir</button>`;
 }
+
 function logout() { sessionStorage.clear(); window.location.href = 'login.html'; }
+
 function showToast(msg, type='') {
   const t = document.getElementById('toast');
-  document.getElementById('toastMsg').textContent = msg;
-  t.className = 'toast ' + type; t.classList.add('show');
+  if (!t) return;
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-// Cachés para mostrar nombres
-let cacheJugadores = {}, cachePartidos = {};
+document.addEventListener('DOMContentLoaded', () => {
+  cargarCatalogosIniciales();
+  
+  document.querySelectorAll('.modal-close, .btn-outline').forEach(b => {
+    b.addEventListener('click', cerrarModales);
+  });
+});
 
-async function cargarCaches() {
+async function cargarCatalogosIniciales() {
   try {
-    const [j, p] = await Promise.all([
-      fetch('http://localhost:8080/busquedaJugadores').then(r=>r.json()),
-      fetch('http://localhost:8080/busquedaPartidos').then(r=>r.json())
-    ]);
-    j.forEach(x => cacheJugadores[x.id_jugador] = x.nombre);
-    p.forEach(x => cachePartidos[x.id_partido] = x.rival);
-  } catch(_) {}
-}
-
-async function buscarRelaciones() {
-  const j = document.getElementById('busJugador').value.trim();
-  const p = document.getElementById('busPartido').value.trim();
-  // No hay endpoint de búsqueda: cargamos todos y filtramos
-  document.getElementById('tabla').innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="icon">⏳</div><p>Cargando...</p></div></td></tr>`;
-  try {
-    await cargarCaches();
-    // Construir tabla de todas las relaciones vía jugadores/partidos conocidos
-    // Como no hay busquedaJugadorPartido, mostramos los datos cruzados disponibles
-    const jugadores = await fetch('http://localhost:8080/busquedaJugadores' + (j ? `?nombre=` : '')).then(r=>r.json());
-    renderTabla(jugadores, j, p);
+    listaJugadoresGlobal = await fetch('http://localhost:8080/busquedaJugadores').then(r => r.json());
+    listaPartidosGlobal = await fetch('http://localhost:8080/busquedaPartidos').then(r => r.json());
+    buscarRelaciones();
   } catch(e) {
-    showToast('Error: ' + e.message, 'error');
-    document.getElementById('tabla').innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="icon">⚠️</div><p>Error al cargar datos</p></div></td></tr>`;
+    console.error("Error cargando catálogos secundarios", e);
+    showToast('Error al cargar catálogos de jugadores/partidos', 'error');
   }
 }
 
-function renderTabla(jugadores, filtroJ, filtroP) {
-  // Como no tenemos endpoint de lista de JUGADOR_PARTIDO, mostramos un formulario funcional
-  // para crear/eliminar relaciones individualmente
+async function buscarRelaciones() {
+  const nombreFiltro = document.getElementById('busJugador').value.trim().toLowerCase();
+  const rivalFiltro = document.getElementById('busPartido').value.trim().toLowerCase();
+  
+  let idJugadorParam = null;
+  let idPartidoParam = null;
+
+  if (nombreFiltro) {
+    const enc = listaJugadoresGlobal.find(j => j.nombre.toLowerCase().includes(nombreFiltro));
+    idJugadorParam = enc ? enc.id_jugador : -1;
+  }
+  
+  if (rivalFiltro) {
+    const enc = listaPartidosGlobal.find(p => p.rival.toLowerCase().includes(rivalFiltro));
+    idPartidoParam = enc ? enc.id_partido : -1;
+  }
+
+  let url = 'http://localhost:8080/busquedaJugadorPartido';
+  const params = [];
+  if (idJugadorParam !== null) params.push(`JUGADOR_id_jugador=${idJugadorParam}`);
+  if (idPartidoParam !== null) params.push(`PARTIDO_id_partido=${idPartidoParam}`);
+  if (params.length > 0) url += '?' + params.join('&');
+
   const tbody = document.getElementById('tabla');
-  tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="icon">ℹ️</div>
-    <p>Usa el formulario de arriba para añadir relaciones. Para eliminar una relación, introduce los IDs en la búsqueda.</p>
-    <div style="margin-top:12px;display:flex;gap:8px;justify-content:center">
-      ${filtroJ && filtroP ? `<button class="btn btn-danger" onclick="eliminarRelacion(${filtroJ},${filtroP})">Eliminar relación J:${filtroJ} — P:${filtroP}</button>` : ''}
-    </div>
-  </div></td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="icon">⏳</div><p>Cargando...</p></div></td></tr>`;
+
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(await resp.text());
+    const relaciones = await resp.json();
+    renderTabla(relaciones);
+  } catch(e) {
+    showToast('Error: ' + e.message, 'error');
+    tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="icon">⚠️</div><p>Error al cargar datos</p></div></td></tr>`;
+  }
 }
 
-function limpiarFiltros() {
-  document.getElementById('busJugador').value = '';
-  document.getElementById('busPartido').value = '';
-  document.getElementById('tabla').innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="icon">⚽</div><p>Pulsa Buscar para cargar las relaciones</p></div></td></tr>`;
+function renderTabla(relaciones) {
+  const tbody = document.getElementById('tabla');
+  if (relaciones.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="icon">⚽</div><p>No se encontraron relaciones registradas</p></div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = relaciones.map(rel => {
+    // CORRECCIÓN AQUÍ: Se usan las propiedades en MAYÚSCULAS tal y como vienen del JSON
+    const idJugador = rel.JUGADOR_id_jugador;
+    const idPartido = rel.PARTIDO_id_partido;
+
+    const jugadorObj = listaJugadoresGlobal.find(j => j.id_jugador === idJugador) || {};
+    const partidoObj = listaPartidosGlobal.find(p => p.id_partido === idPartido) || {};
+
+    return `
+      <tr>
+        <td>${idJugador}</td>
+        <td>${jugadorObj.nombre || 'Desconocido'}</td>
+        <td>${idPartido}</td>
+        <td>${partidoObj.rival || 'Desconocido'}</td>
+        <td>
+          <button class="btn btn-danger" style="padding: 4px 8px; font-size: 12px;" 
+                  onclick="eliminarRelacion(${idJugador}, ${idPartido})">
+            Eliminar
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
 }
 
 function abrirModalCrear() {
@@ -87,6 +133,7 @@ async function crearRelacion() {
     if (!resp.ok) throw new Error(await resp.text());
     showToast('Relación creada correctamente', 'success');
     cerrarModales();
+    buscarRelaciones();
   } catch(e) { showToast('Error: ' + e.message, 'error'); }
 }
 
@@ -96,18 +143,20 @@ async function eliminarRelacion(j, p) {
     const resp = await fetch(`http://localhost:8080/eliminarJugadorPartido?JUGADOR_id_jugador=${j}&PARTIDO_id_partido=${p}`);
     if (!resp.ok) throw new Error(await resp.text());
     showToast('Relación eliminada', 'success');
-    limpiarFiltros();
+    buscarRelaciones();
   } catch(e) { showToast('Error: ' + e.message, 'error'); }
+}
+
+function limpiarFiltros() {
+  document.getElementById('busJugador').value = '';
+  document.getElementById('busPartido').value = '';
+  buscarRelaciones();
 }
 
 function cerrarModales() {
   document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
 }
+
 document.addEventListener('click', e => {
   if (e.target.classList.contains('modal-overlay')) cerrarModales();
-  if (e.target.classList.contains('modal-close') || e.target.closest('.modal-close')) cerrarModales();
-  if (e.target.classList.contains('btn-outline') && e.target.closest('.modal-footer')) cerrarModales();
-});
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !document.querySelector('.modal-overlay.open')) buscarRelaciones();
 });

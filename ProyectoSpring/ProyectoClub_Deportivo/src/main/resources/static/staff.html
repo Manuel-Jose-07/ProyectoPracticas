@@ -19,6 +19,9 @@
     <a href="staff.html" class="active">Staffs</a>
     <a href="partido.html">Partidos</a>
     <a href="fichaMedica.html" class="admin-only">Fichas Médicas</a>
+    <a href="usuario.html" class="admin-only">Usuarios</a>
+    <a href="jugadorPartido.html" class="admin-only">Jugador-Partido</a>
+    <a href="staffEquipo.html" class="admin-only">Staff-Equipo</a>
   </div>
   <div class="nav-right"></div>
 </nav>
@@ -66,16 +69,15 @@
     <table>
       <thead>
         <tr>
-          <th>ID</th>
           <th>Nombre</th>
           <th>Cargo</th>
           <th>Estado</th>
-          <th>Acciones</th>
+          <th class="admin-only">Acciones</th>
         </tr>
       </thead>
       <tbody id="tabla">
         <tr>
-          <td colspan="5"><div class="empty-state"><div class="icon">🧑‍💼</div><p>Pulsa Buscar para cargar el staff</p></div></td>
+          <td colspan="4"><div class="empty-state"><div class="icon">🧑‍💼</div><p>Pulsa Buscar para cargar el staff</p></div></td>
         </tr>
       </tbody>
     </table>
@@ -86,12 +88,7 @@
 <div class="modal-overlay" id="modalCrear">
   <div class="modal">
     <button class="modal-close">✕</button>
-    <h2>
-      <svg style="width:20px;height:20px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24">
-        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-      </svg>
-      NUEVO STAFF
-    </h2>
+    <h2>NUEVO STAFF</h2>
     <div class="form-grid">
       <div class="form-field full">
         <label>Nombre <span class="req">*</span></label>
@@ -103,10 +100,7 @@
       </div>
       <div class="form-field">
         <label>Activo <span class="req">*</span></label>
-        <select id="cActivo">
-          <option value="true">Sí</option>
-          <option value="false">No</option>
-        </select>
+        <select id="cActivo"><option value="true">Sí</option><option value="false">No</option></select>
       </div>
     </div>
     <div class="modal-footer">
@@ -123,13 +117,7 @@
 <div class="modal-overlay" id="modalModificar">
   <div class="modal">
     <button class="modal-close">✕</button>
-    <h2>
-      <svg style="width:20px;height:20px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24">
-        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-      </svg>
-      MODIFICAR STAFF
-    </h2>
+    <h2>MODIFICAR STAFF</h2>
     <input type="hidden" id="mId" />
     <div class="form-grid">
       <div class="form-field full">
@@ -142,10 +130,7 @@
       </div>
       <div class="form-field">
         <label>Activo <span class="req">*</span></label>
-        <select id="mActivo">
-          <option value="true">Sí</option>
-          <option value="false">No</option>
-        </select>
+        <select id="mActivo"><option value="true">Sí</option><option value="false">No</option></select>
       </div>
     </div>
     <div class="modal-footer">

@@ -102,7 +102,7 @@ function renderTabla(jugadores, equipoMap) {
   tbody.innerHTML = jugadores.map(j => `
     <tr>
       <td>${j.nombre}</td>
-      <td>${equipoMap && equipoMap[j.eQUIPO_id_equipo] ? equipoMap[j.eQUIPO_id_equipo] : (j.eQUIPO_id_equipo || '—')}</td>
+      <td>${equipoMap[j.equipoid_equipo || j.equipo_id_equipo || j.EQUIPO_id_equipo] || '—'}</td>
       <td>${j.fecha_nacimiento || '—'}</td>
       <td>${j.posicion || '—'}</td>
       <td>${j.dorsal ?? '—'}</td>

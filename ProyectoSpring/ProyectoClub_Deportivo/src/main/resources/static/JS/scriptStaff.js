@@ -36,7 +36,7 @@ async function buscarStaff() {
   if (cargo) url += `cargo=${encodeURIComponent(cargo)}`;
 
   document.getElementById('tabla').innerHTML = `
-    <tr><td colspan="5"><div class="empty-state"><div class="icon">⏳</div><p>Cargando...</p></div></td></tr>`;
+    <tr><td colspan="4"><div class="empty-state"><div class="icon">⏳</div><p>Cargando...</p></div></td></tr>`;
 
   try {
     const resp = await fetch(url);
@@ -45,7 +45,7 @@ async function buscarStaff() {
   } catch (e) {
     showToast('Error: ' + e.message, 'error');
     document.getElementById('tabla').innerHTML = `
-      <tr><td colspan="5"><div class="empty-state"><div class="icon">⚠️</div><p>Error al cargar datos</p></div></td></tr>`;
+      <tr><td colspan="4"><div class="empty-state"><div class="icon">⚠️</div><p>Error al cargar datos</p></div></td></tr>`;
   }
 }
 
@@ -53,12 +53,11 @@ function renderTabla(staff) {
   const tbody = document.getElementById('tabla');
   const esAdmin = document.body.classList.contains('is-admin');
   if (!staff.length) {
-    tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="icon">🧑‍💼</div><p>No se encontró staff</p></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="icon">🧑‍💼</div><p>No se encontró staff</p></div></td></tr>`;
     return;
   }
   tbody.innerHTML = staff.map(s => `
     <tr>
-      <td>${s.id_cuerpo_tecnico}</td>
       <td>${s.nombre}</td>
       <td>${s.cargo}</td>
       <td><span class="badge ${s.activo ? 'badge-green' : 'badge-red'}">${s.activo ? 'Activo' : 'Inactivo'}</span></td>
@@ -81,7 +80,8 @@ function esc(str) { return String(str).replace(/'/g, "\\'"); }
 function limpiarFiltros() {
   document.getElementById('busNombre').value = '';
   document.getElementById('busCargo').value = '';
-  buscarStaff();
+  document.getElementById('tabla').innerHTML = `
+    <tr><td colspan="4"><div class="empty-state"><div class="icon">🧑‍💼</div><p>Pulsa Buscar para cargar el staff</p></div></td></tr>`;
 }
 
 function abrirModalCrear() {
@@ -149,4 +149,7 @@ document.addEventListener('click', e => {
   if (e.target.classList.contains('btn-outline') && e.target.closest('.modal-footer')) cerrarModales();
 });
 
-buscarStaff();
+// Enter para buscar
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !document.querySelector('.modal-overlay.open')) buscarStaff();
+});
