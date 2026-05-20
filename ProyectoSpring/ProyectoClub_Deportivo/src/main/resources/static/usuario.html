@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fichas Médicas - La Liara Balompié</title>
+  <title>Usuarios - La Liara Balompié</title>
   <link rel="stylesheet" href="CSS/estiloEquipo.css" />
 </head>
 <body>
@@ -18,8 +18,8 @@
     <a href="equipo.html">Equipos</a>
     <a href="staff.html">Staffs</a>
     <a href="partido.html">Partidos</a>
-    <a href="fichaMedica.html" class="active admin-only">Fichas Médicas</a>
-    <a href="usuario.html" class="admin-only">Usuarios</a>
+    <a href="fichaMedica.html" class="admin-only">Fichas Médicas</a>
+    <a href="usuario.html" class="active admin-only">Usuarios</a>
     <a href="jugadorPartido.html" class="admin-only">Jugador-Partido</a>
     <a href="staffEquipo.html" class="admin-only">Staff-Equipo</a>
   </div>
@@ -31,32 +31,33 @@
     <div>
       <h1>
         <svg style="width:32px;height:32px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:8px" viewBox="0 0 24 24">
-          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
         </svg>
-        FICHAS MÉDICAS
+        USUARIOS
       </h1>
-      <p>Gestión de fichas médicas de los jugadores</p>
+      <p>Gestión de usuarios del sistema</p>
     </div>
     <button class="btn btn-primary admin-only" onclick="abrirModalCrear()">
       <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      Nueva ficha
+      Nuevo usuario
     </button>
   </div>
 
   <div class="search-bar">
     <div class="field">
-      <label>Nombre jugador</label>
-      <input type="text" id="busJugadorNombre" placeholder="Buscar por nombre del jugador..." />
+      <label>Nombre</label>
+      <input type="text" id="busNombre" placeholder="Buscar por nombre..." />
     </div>
     <div class="field">
-      <label>Aptitud</label>
-      <select id="busApto">
+      <label>Rol</label>
+      <select id="busAdmin">
         <option value="">Todos</option>
-        <option value="true">Apto</option>
-        <option value="false">No apto</option>
+        <option value="true">Administrador</option>
+        <option value="false">Usuario normal</option>
       </select>
     </div>
-    <button class="btn btn-primary" onclick="buscarFichas()">
+    <button class="btn btn-primary" onclick="buscarUsuarios()">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       Buscar
     </button>
@@ -70,18 +71,14 @@
     <table>
       <thead>
         <tr>
-          <th>Jugador</th>
-          <th>Código</th>
-          <th>Descripción</th>
-          <th>Gr. Sanguíneo</th>
-          <th>Alergias</th>
-          <th>Aptitud</th>
-          <th>Acciones</th>
+          <th>Nombre</th>
+          <th>Rol</th>
+          <th class="admin-only">Acciones</th>
         </tr>
       </thead>
       <tbody id="tabla">
         <tr>
-          <td colspan="7"><div class="empty-state"><div class="icon">🩺</div><p>Pulsa Buscar para cargar las fichas médicas</p></div></td>
+          <td colspan="3"><div class="empty-state"><div class="icon">👤</div><p>Pulsa Buscar para cargar los usuarios</p></div></td>
         </tr>
       </tbody>
     </table>
@@ -92,65 +89,55 @@
 <div class="modal-overlay" id="modalCrear">
   <div class="modal">
     <button class="modal-close">✕</button>
-    <h2>NUEVA FICHA MÉDICA</h2>
+    <h2>
+      <svg style="width:20px;height:20px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      NUEVO USUARIO
+    </h2>
     <div class="form-grid">
-      <div class="form-field">
-        <label>ID Jugador <span class="req">*</span></label>
-        <input type="number" id="cJugador" placeholder="ID del jugador" />
-      </div>
-      <div class="form-field">
-        <label>Código <span class="req">*</span></label>
-        <input type="text" id="cCodigo" placeholder="FM001" />
-      </div>
       <div class="form-field full">
-        <label>Descripción</label>
-        <input type="text" id="cDescripcion" placeholder="Observaciones médicas..." />
+        <label>Nombre <span class="req">*</span></label>
+        <input type="text" id="cNombre" placeholder="Nombre de usuario" />
       </div>
       <div class="form-field">
-        <label>Grupo Sanguíneo</label>
-        <input type="text" id="cGrupo" placeholder="A+, B-, 0+..." />
+        <label>Contraseña <span class="req">*</span></label>
+        <input type="password" id="cPassword" placeholder="Contraseña" />
       </div>
       <div class="form-field">
-        <label>Alergias</label>
-        <input type="text" id="cAlergias" placeholder="Ninguna / descripción" />
-      </div>
-      <div class="form-field">
-        <label>Apto <span class="req">*</span></label>
-        <select id="cApto"><option value="true">Sí</option><option value="false">No</option></select>
+        <label>Rol <span class="req">*</span></label>
+        <select id="cAdmin">
+          <option value="false">Usuario normal</option>
+          <option value="true">Administrador</option>
+        </select>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline">Cancelar</button>
-      <button class="btn btn-primary" onclick="crearFicha()">
+      <button class="btn btn-primary" onclick="crearUsuario()">
         <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-        Crear ficha
+        Crear usuario
       </button>
     </div>
   </div>
 </div>
 
-<!-- MODAL MODIFICAR -->
+<!-- MODAL MODIFICAR (cambiar contraseña) -->
 <div class="modal-overlay" id="modalModificar">
   <div class="modal">
     <button class="modal-close">✕</button>
-    <h2>MODIFICAR FICHA MÉDICA</h2>
-    <input type="hidden" id="mId" />
+    <h2>
+      <svg style="width:20px;height:20px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+      </svg>
+      CAMBIAR CONTRASEÑA
+    </h2>
+    <input type="hidden" id="mNombre" />
     <div class="form-grid">
       <div class="form-field full">
-        <label>Descripción</label>
-        <input type="text" id="mDescripcion" />
-      </div>
-      <div class="form-field">
-        <label>Grupo Sanguíneo</label>
-        <input type="text" id="mGrupo" />
-      </div>
-      <div class="form-field">
-        <label>Alergias</label>
-        <input type="text" id="mAlergias" />
-      </div>
-      <div class="form-field">
-        <label>Apto <span class="req">*</span></label>
-        <select id="mApto"><option value="true">Sí</option><option value="false">No</option></select>
+        <label>Nueva contraseña <span class="req">*</span></label>
+        <input type="password" id="mPassword" placeholder="Nueva contraseña" />
       </div>
     </div>
     <div class="modal-footer">
@@ -164,6 +151,6 @@
 </div>
 
 <div class="toast" id="toast"><div class="toast-dot"></div><span id="toastMsg"></span></div>
-<script src="JS/scriptFichaMedica.js"></script>
+<script src="JS/scriptUsuario.js"></script>
 </body>
 </html>

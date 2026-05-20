@@ -2,7 +2,6 @@
 (function initSesion() {
   const rol = sessionStorage.getItem('rol');
   if (!rol) { window.location.href = 'login.html'; return; }
-  // Fichas médicas solo accesibles para admin
   if (rol !== 'admin') { window.location.href = 'equipo.html'; return; }
   document.body.classList.add('is-admin');
   renderNavUser(rol, sessionStorage.getItem('usuario') || '');
@@ -30,37 +29,67 @@ function showToast(msg, type = '') {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
+// Cache jugadores para mostrar nombres
+let jugadoresCache = null;
+async function cargarJugadores() {
+  if (jugadoresCache) return jugadoresCache;
+  try {
+    const resp = await fetch('http://localhost:8080/busquedaJugadores');
+    jugadoresCache = await resp.json();
+  } catch(_) { jugadoresCache = []; }
+  return jugadoresCache;
+}
+
 async function buscarFichas() {
-  const jugador = document.getElementById('busJugador').value.trim();
+  const jugadorNombre = document.getElementById('busJugadorNombre').value.trim();
   const apto = document.getElementById('busApto').value;
-  let url = 'http://localhost:8080/busquedaFichasMedicas?';
-  if (jugador) url += `JUGADOR_id_jugador=${jugador}&`;
-  if (apto !== '') url += `apto=${apto}`;
 
   document.getElementById('tabla').innerHTML = `
-    <tr><td colspan="8"><div class="empty-state"><div class="icon">⏳</div><p>Cargando...</p></div></td></tr>`;
+    <tr><td colspan="7"><div class="empty-state"><div class="icon">⏳</div><p>Cargando...</p></div></td></tr>`;
 
   try {
+    let jugadorId = null;
+    const jugadores = await cargarJugadores();
+    const jugadorMap = {};
+    jugadores.forEach(j => jugadorMap[j.id_jugador] = j.nombre);
+
+    if (jugadorNombre) {
+      // Buscar jugador por nombre
+      const match = jugadores.find(j =>
+        j.nombre.toLowerCase().includes(jugadorNombre.toLowerCase())
+      );
+      if (match) {
+        jugadorId = match.id_jugador;
+      } else {
+        document.getElementById('tabla').innerHTML = `
+          <tr><td colspan="7"><div class="empty-state"><div class="icon">🩺</div><p>No se encontró ningún jugador con ese nombre</p></div></td></tr>`;
+        return;
+      }
+    }
+
+    let url = 'http://localhost:8080/busquedaFichasMedicas?';
+    if (jugadorId !== null) url += `JUGADOR_id_jugador=${jugadorId}&`;
+    if (apto !== '') url += `apto=${apto}`;
+
     const resp = await fetch(url);
     if (!resp.ok) throw new Error(await resp.text());
-    renderTabla(await resp.json());
+    renderTabla(await resp.json(), jugadorMap);
   } catch (e) {
     showToast('Error: ' + e.message, 'error');
     document.getElementById('tabla').innerHTML = `
-      <tr><td colspan="8"><div class="empty-state"><div class="icon">⚠️</div><p>Error al cargar datos</p></div></td></tr>`;
+      <tr><td colspan="7"><div class="empty-state"><div class="icon">⚠️</div><p>Error al cargar datos</p></div></td></tr>`;
   }
 }
 
-function renderTabla(fichas) {
+function renderTabla(fichas, jugadorMap) {
   const tbody = document.getElementById('tabla');
   if (!fichas.length) {
-    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="icon">🩺</div><p>No se encontraron fichas médicas</p></div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="icon">🩺</div><p>No se encontraron fichas médicas</p></div></td></tr>`;
     return;
   }
   tbody.innerHTML = fichas.map(f => `
     <tr>
-      <td>${f.id_ficha}</td>
-      <td>${f.jUGADOR_id_jugador}</td>
+      <td>${jugadorMap && jugadorMap[f.jUGADOR_id_jugador] ? jugadorMap[f.jUGADOR_id_jugador] : (f.jUGADOR_id_jugador || '—')}</td>
       <td>${f.codigo}</td>
       <td>${f.descripcion || '—'}</td>
       <td>${f.grupo_sanguineo || '—'}</td>
@@ -81,10 +110,12 @@ function renderTabla(fichas) {
 }
 
 function esc(str) { return String(str).replace(/'/g, "\\'"); }
+
 function limpiarFiltros() {
-  document.getElementById('busJugador').value = '';
+  document.getElementById('busJugadorNombre').value = '';
   document.getElementById('busApto').value = '';
-  buscarFichas();
+  document.getElementById('tabla').innerHTML = `
+    <tr><td colspan="7"><div class="empty-state"><div class="icon">🩺</div><p>Pulsa Buscar para cargar las fichas médicas</p></div></td></tr>`;
 }
 
 function abrirModalCrear() {
@@ -112,8 +143,7 @@ async function crearFicha() {
     const resp = await fetch(url);
     if (!resp.ok) throw new Error(await resp.text());
     showToast('Ficha creada', 'success');
-    cerrarModales();
-    buscarFichas();
+    cerrarModales(); buscarFichas();
   } catch (e) { showToast('Error: ' + e.message, 'error'); }
 }
 
@@ -142,8 +172,7 @@ async function ejecutarModificar() {
     const resp = await fetch(url);
     if (!resp.ok) throw new Error(await resp.text());
     showToast('Ficha modificada', 'success');
-    cerrarModales();
-    buscarFichas();
+    cerrarModales(); buscarFichas();
   } catch (e) { showToast('Error: ' + e.message, 'error'); }
 }
 
@@ -166,4 +195,7 @@ document.addEventListener('click', e => {
   if (e.target.classList.contains('btn-outline') && e.target.closest('.modal-footer')) cerrarModales();
 });
 
-buscarFichas();
+// Enter para buscar
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !document.querySelector('.modal-overlay.open')) buscarFichas();
+});

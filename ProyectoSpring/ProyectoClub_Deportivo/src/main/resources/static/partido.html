@@ -19,6 +19,9 @@
     <a href="staff.html">Staffs</a>
     <a href="partido.html" class="active">Partidos</a>
     <a href="fichaMedica.html" class="admin-only">Fichas Médicas</a>
+    <a href="usuario.html" class="admin-only">Usuarios</a>
+    <a href="jugadorPartido.html" class="admin-only">Jugador-Partido</a>
+    <a href="staffEquipo.html" class="admin-only">Staff-Equipo</a>
   </div>
   <div class="nav-right"></div>
 </nav>
@@ -48,8 +51,8 @@
       <input type="text" id="busRival" placeholder="Nombre del rival..." />
     </div>
     <div class="field">
-      <label>ID Equipo</label>
-      <input type="number" id="busEquipo" placeholder="ID del equipo" />
+      <label>Nombre equipo</label>
+      <input type="text" id="busEquipoNombre" placeholder="Ej: Alevín A..." />
     </div>
     <button class="btn btn-primary" onclick="buscarPartidos()">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -65,7 +68,7 @@
     <table>
       <thead>
         <tr>
-          <th>ID</th>
+          <th>Equipo</th>
           <th>Fecha</th>
           <th>Hora</th>
           <th>Rival</th>
@@ -73,7 +76,7 @@
           <th>Local</th>
           <th>Resultado</th>
           <th>Goles</th>
-          <th>Acciones</th>
+          <th class="admin-only">Acciones</th>
         </tr>
       </thead>
       <tbody id="tabla">
@@ -89,12 +92,7 @@
 <div class="modal-overlay" id="modalCrear">
   <div class="modal" style="max-width:600px">
     <button class="modal-close">✕</button>
-    <h2>
-      <svg style="width:20px;height:20px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24">
-        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-      </svg>
-      NUEVO PARTIDO
-    </h2>
+    <h2>NUEVO PARTIDO</h2>
     <div class="form-grid">
       <div class="form-field">
         <label>ID Equipo <span class="req">*</span></label>
@@ -154,13 +152,7 @@
 <div class="modal-overlay" id="modalModificar">
   <div class="modal" style="max-width:600px">
     <button class="modal-close">✕</button>
-    <h2>
-      <svg style="width:20px;height:20px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:6px" viewBox="0 0 24 24">
-        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-      </svg>
-      MODIFICAR PARTIDO
-    </h2>
+    <h2>MODIFICAR PARTIDO</h2>
     <input type="hidden" id="mId" />
     <div class="form-grid">
       <div class="form-field">

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jugador-Partido - La Liara Balompié</title>
+  <link rel="stylesheet" href="CSS/estiloEquipo.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo-wrap" title="Inicio" onclick="window.location.href='equipo.html'">
+    <img class="club-logo" src="img/logoLiara.png" alt="logo-liara" />
+  </div>
+  <span class="nav-sep"></span>
+  <div class="nav-links">
+    <a href="jugador.html">Jugadores</a>
+    <a href="equipo.html">Equipos</a>
+    <a href="staff.html">Staffs</a>
+    <a href="partido.html">Partidos</a>
+    <a href="fichaMedica.html" class="admin-only">Fichas Médicas</a>
+    <a href="usuario.html" class="admin-only">Usuarios</a>
+    <a href="jugadorPartido.html" class="active admin-only">Jugador-Partido</a>
+    <a href="staffEquipo.html" class="admin-only">Staff-Equipo</a>
+  </div>
+  <div class="nav-right"></div>
+</nav>
+
+<main>
+  <div class="page-header">
+    <div>
+      <h1>
+        <svg style="width:32px;height:32px;stroke:var(--primary);fill:none;stroke-width:2;vertical-align:middle;margin-right:8px" viewBox="0 0 24 24">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/>
+        </svg>
+        JUGADOR — PARTIDO
+      </h1>
+      <p>Relación muchos a muchos entre jugadores y partidos</p>
+    </div>
+    <button class="btn btn-primary" onclick="abrirModalCrear()">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Añadir relación
+    </button>
+  </div>
+
+  <div class="search-bar">
+    <div class="field">
+      <label>ID Jugador</label>
+      <input type="number" id="busJugador" placeholder="ID del jugador" />
+    </div>
+    <div class="field">
+      <label>ID Partido</label>
+      <input type="number" id="busPartido" placeholder="ID del partido" />
+    </div>
+    <button class="btn btn-primary" onclick="buscarRelaciones()">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Buscar
+    </button>
+    <button class="btn btn-outline" onclick="limpiarFiltros()">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      Limpiar
+    </button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID Jugador</th>
+          <th>Nombre Jugador</th>
+          <th>ID Partido</th>
+          <th>Rival</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tabla">
+        <tr>
+          <td colspan="5"><div class="empty-state"><div class="icon">⚽</div><p>Pulsa Buscar para cargar las relaciones</p></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- MODAL CREAR -->
+<div class="modal-overlay" id="modalCrear">
+  <div class="modal">
+    <button class="modal-close">✕</button>
+    <h2>AÑADIR RELACIÓN JUGADOR-PARTIDO</h2>
+    <div class="form-grid">
+      <div class="form-field">
+        <label>ID Jugador <span class="req">*</span></label>
+        <input type="number" id="cJugador" placeholder="ID del jugador" />
+      </div>
+      <div class="form-field">
+        <label>ID Partido <span class="req">*</span></label>
+        <input type="number" id="cPartido" placeholder="ID del partido" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline">Cancelar</button>
+      <button class="btn btn-primary" onclick="crearRelacion()">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Añadir
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><div class="toast-dot"></div><span id="toastMsg"></span></div>
+<script src="JS/scriptJugadorPartido.js"></script>
+</body>
+</html>

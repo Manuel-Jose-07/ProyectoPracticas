@@ -10,7 +10,42 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap"
         rel="stylesheet" />
+    <style>
+        .pass-wrap { position: relative; }
+        .pass-wrap .field-input { padding-right: 44px; width: 100%; box-sizing: border-box; }
+        .toggle-pass {
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; cursor: pointer; padding: 4px;
+            color: var(--text-muted, #888); display: flex; align-items: center;
+        }
+        .toggle-pass:hover { color: var(--primary, #4f8ef7); }
+        .toggle-pass svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
 
+        .register-link {
+            margin-top: 14px; text-align: center;
+            font-size: 13px; color: var(--text-muted, #888);
+        }
+        .register-link a {
+            color: var(--primary, #4f8ef7); text-decoration: none; font-weight: 500;
+        }
+        .register-link a:hover { text-decoration: underline; }
+
+        /* Panel registro */
+        .register-panel { display: none; flex-direction: column; gap: 0; }
+        .register-panel.active { display: flex; }
+        .login-panel { display: flex; flex-direction: column; gap: 0; }
+        .login-panel.hidden { display: none; }
+
+        .back-link {
+            background: none; border: none; cursor: pointer;
+            color: var(--primary, #4f8ef7); font-size: 13px; font-weight: 500;
+            text-align: left; padding: 0; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 4px;
+        }
+        .back-link:hover { text-decoration: underline; }
+        .access-title-small { font-size: 18px; font-weight: 700; margin-bottom: 4px; letter-spacing: 1px; }
+        .access-sub-small { font-size: 12px; color: var(--text-muted, #888); margin-bottom: 16px; }
+    </style>
 </head>
 
 <body>
@@ -63,32 +98,96 @@
 
         <div class="access-side">
             <div class="access-card" id="accessCard">
-                <div class="access-title">ACCESO</div>
-                <div class="access-sub">Por favor introduce tu usuario y contraseña</div>
 
-                <div class="field-group">
-                    <div class="field-wrap" id="usuField">
-                        <label class="field-label">Usuario</label>
-                        <input class="field-input" type="text" id="usuInput" placeholder="Introduce tu usuario" />
+                <!-- PANEL LOGIN -->
+                <div class="login-panel" id="loginPanel">
+                    <div class="access-title">ACCESO</div>
+                    <div class="access-sub">Por favor introduce tu usuario y contraseña</div>
+
+                    <div class="field-group">
+                        <div class="field-wrap" id="usuField">
+                            <label class="field-label">Usuario <span style="color:#e55;font-size:12px">*</span></label>
+                            <input class="field-input" type="text" id="usuInput" placeholder="Introduce tu usuario" />
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <div class="field-wrap" id="passField">
+                            <label class="field-label">Contraseña <span style="color:#e55;font-size:12px">*</span></label>
+                            <div class="pass-wrap">
+                                <input class="field-input" type="password" id="passInput" placeholder="••••••••" />
+                                <button class="toggle-pass" type="button" onclick="togglePass('passInput', this)" title="Ver contraseña">
+                                    <svg id="eyeIcon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-access" onclick="acceder()">
+                        Entrar al sistema →
+                    </button>
+
+                    <div class="register-link">
+                        ¿No estás registrado todavía? <a href="#" onclick="mostrarRegistro(event)">Hazte usuario</a>
+                    </div>
+
+                    <div class="error-msg" id="errorMsg">Usuario o contraseña incorrectos</div>
+
+                    <div class="access-footer">
+                        Sistema de gestión v1.0 · Club Deportivo
                     </div>
                 </div>
 
-                <div class="field-group">
-                    <div class="field-wrap" id="passField">
-                        <label class="field-label">Contraseña</label>
-                        <input class="field-input" type="password" id="passInput" placeholder="••••••••" />
+                <!-- PANEL REGISTRO -->
+                <div class="register-panel" id="registerPanel">
+                    <button class="back-link" onclick="mostrarLogin(event)">
+                        ← Volver al login
+                    </button>
+                    <div class="access-title-small">CREAR CUENTA</div>
+                    <div class="access-sub-small">Rellena los datos para registrarte como usuario</div>
+
+                    <div class="field-group">
+                        <div class="field-wrap">
+                            <label class="field-label">Usuario <span style="color:#e55;font-size:12px">*</span></label>
+                            <input class="field-input" type="text" id="regNombre" placeholder="Elige un nombre de usuario" />
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <div class="field-wrap">
+                            <label class="field-label">Contraseña <span style="color:#e55;font-size:12px">*</span></label>
+                            <div class="pass-wrap">
+                                <input class="field-input" type="password" id="regPass" placeholder="••••••••" />
+                                <button class="toggle-pass" type="button" onclick="togglePass('regPass', this)" title="Ver contraseña">
+                                    <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <div class="field-wrap">
+                            <label class="field-label">Confirmar contraseña <span style="color:#e55;font-size:12px">*</span></label>
+                            <div class="pass-wrap">
+                                <input class="field-input" type="password" id="regPass2" placeholder="••••••••" />
+                                <button class="toggle-pass" type="button" onclick="togglePass('regPass2', this)" title="Ver contraseña">
+                                    <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-access" onclick="registrarse()">
+                        Crear cuenta →
+                    </button>
+
+                    <div class="error-msg" id="errorReg">Error en el registro</div>
+
+                    <div class="access-footer">
+                        Los usuarios creados aquí serán usuarios normales (sin permisos de administrador)
                     </div>
                 </div>
 
-                <button class="btn-access" onclick="acceder()">
-                    Entrar al sistema →
-                </button>
-
-                <div class="error-msg" id="errorMsg">Usuario o contraseña incorrectos</div>
-
-                <div class="access-footer">
-                    Sistema de gestión v1.0 · Club Deportivo
-                </div>
             </div>
         </div>
     </div>

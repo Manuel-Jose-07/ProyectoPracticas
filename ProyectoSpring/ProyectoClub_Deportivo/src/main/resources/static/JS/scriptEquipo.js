@@ -4,6 +4,10 @@
   if (!rol) { window.location.href = 'login.html'; return; }
   if (rol === 'admin') document.body.classList.add('is-admin');
   renderNavUser(rol, sessionStorage.getItem('usuario') || '');
+  // Ocultar th de Acciones para no-admin
+  if (rol !== 'admin') {
+    document.querySelectorAll('th.admin-only').forEach(th => th.style.display = 'none');
+  }
 })();
 
 function renderNavUser(rol, nombre) {
@@ -18,12 +22,8 @@ function renderNavUser(rol, nombre) {
     </button>`;
 }
 
-function logout() {
-  sessionStorage.clear();
-  window.location.href = 'login.html';
-}
+function logout() { sessionStorage.clear(); window.location.href = 'login.html'; }
 
-// ── Toast ────────────────────────────────────────────────
 function showToast(msg, type = '') {
   const t = document.getElementById('toast');
   document.getElementById('toastMsg').textContent = msg;
@@ -46,8 +46,7 @@ async function buscarEquipos() {
   try {
     const resp = await fetch(url);
     if (!resp.ok) throw new Error(await resp.text());
-    const data = await resp.json();
-    renderTabla(data);
+    renderTabla(await resp.json());
   } catch (e) {
     showToast('Error al buscar equipos: ' + e.message, 'error');
     document.getElementById('tabla').innerHTML = `
@@ -68,17 +67,16 @@ function renderTabla(equipos) {
       <td>${e.descripcion || '—'}</td>
       <td>${e.categoria}</td>
       <td>${e.grupo}</td>
-      <td>
+      ${esAdmin ? `<td>
         <div class="td-actions">
-          ${esAdmin ? `
-            <button class="btn btn-icon btn-outline" title="Modificar" onclick="abrirModalModificar(${e.id_equipo},'${esc(e.codigo)}','${esc(e.descripcion||'')}','${esc(e.categoria)}','${esc(e.grupo)}')">
-              <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            </button>
-            <button class="btn btn-icon btn-danger" title="Eliminar" onclick="eliminarEquipo(${e.id_equipo})">
-              <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-            </button>` : '<span style="color:var(--text-muted);font-size:12px">—</span>'}
+          <button class="btn btn-icon btn-outline" title="Modificar" onclick="abrirModalModificar(${e.id_equipo},'${esc(e.codigo)}','${esc(e.descripcion||'')}','${esc(e.categoria)}','${esc(e.grupo)}')">
+            <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button class="btn btn-icon btn-danger" title="Eliminar" onclick="eliminarEquipo(${e.id_equipo})">
+            <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          </button>
         </div>
-      </td>
+      </td>` : ''}
     </tr>`).join('');
 }
 
@@ -87,15 +85,13 @@ function esc(str) { return String(str).replace(/'/g, "\\'"); }
 function limpiarFiltros() {
   document.getElementById('busCategoria').value = '';
   document.getElementById('busGrupo').value = '';
-  buscarEquipos();
+  document.getElementById('tabla').innerHTML = `
+    <tr><td colspan="5"><div class="empty-state"><div class="icon">👕</div><p>Pulsa Buscar para cargar los equipos</p></div></td></tr>`;
 }
 
 // ── Modal Crear ──────────────────────────────────────────
 function abrirModalCrear() {
-  document.getElementById('cCodigo').value = '';
-  document.getElementById('cDescripcion').value = '';
-  document.getElementById('cCategoria').value = '';
-  document.getElementById('cGrupo').value = '';
+  ['cCodigo','cDescripcion','cCategoria','cGrupo'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('modalCrear').classList.add('open');
 }
 
@@ -113,11 +109,8 @@ async function crearEquipo() {
     const resp = await fetch(url);
     if (!resp.ok) throw new Error(await resp.text());
     showToast('Equipo creado correctamente', 'success');
-    cerrarModales();
-    buscarEquipos();
-  } catch (e) {
-    showToast('Error: ' + e.message, 'error');
-  }
+    cerrarModales(); buscarEquipos();
+  } catch (e) { showToast('Error: ' + e.message, 'error'); }
 }
 
 // ── Modal Modificar ──────────────────────────────────────
@@ -145,11 +138,8 @@ async function ejecutarModificar() {
     const resp = await fetch(url);
     if (!resp.ok) throw new Error(await resp.text());
     showToast('Equipo modificado', 'success');
-    cerrarModales();
-    buscarEquipos();
-  } catch (e) {
-    showToast('Error: ' + e.message, 'error');
-  }
+    cerrarModales(); buscarEquipos();
+  } catch (e) { showToast('Error: ' + e.message, 'error'); }
 }
 
 // ── Eliminar ─────────────────────────────────────────────
@@ -160,21 +150,20 @@ async function eliminarEquipo(id) {
     if (!resp.ok) throw new Error(await resp.text());
     showToast('Equipo eliminado', 'success');
     buscarEquipos();
-  } catch (e) {
-    showToast('Error: ' + e.message, 'error');
-  }
+  } catch (e) { showToast('Error: ' + e.message, 'error'); }
 }
 
 // ── Cerrar modales ───────────────────────────────────────
 function cerrarModales() {
   document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
 }
-
 document.addEventListener('click', e => {
   if (e.target.classList.contains('modal-overlay')) cerrarModales();
   if (e.target.classList.contains('modal-close') || e.target.closest('.modal-close')) cerrarModales();
   if (e.target.classList.contains('btn-outline') && e.target.closest('.modal-footer')) cerrarModales();
 });
 
-// Cargar al inicio
-buscarEquipos();
+// Enter para buscar
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !document.querySelector('.modal-overlay.open')) buscarEquipos();
+});
